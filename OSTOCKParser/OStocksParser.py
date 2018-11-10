@@ -76,6 +76,7 @@ def get_links(url, names):
 
 def main():
     names = ['Магнит', 'Мегафон', 'Газпром']
+    url='https://ru.investing.com/'
     links = get_links(url,names)
     for index, link in enumerate(links):
         write_file(link,names[index], index)
