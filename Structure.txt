@@ -8,9 +8,19 @@ HOME
 |  |
 |  |__README.md
 |
-|__OSTOCKParser (Our (russian) stocks parser)
+|__NevsParser (News parser)
 |  |
-|  |__FStocksParser.py
+|  |__Linux
+|  |  |
+|  |  |__NewsParser.py
+|  |  |
+|  |  |__chromedriver
+|  |
+|  |__Windows
+|  |  |
+|  |  |__NewsParser.py
+|  |  |
+|  |  |__chromedriver
 |  |
 |  |__README.md
 |
