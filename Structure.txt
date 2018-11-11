@@ -8,7 +8,7 @@ HOME
 |  |
 |  |__README.md
 |
-|__NevsParser (News parser)
+|__NewsParser (News parser)
 |  |
 |  |__Linux
 |  |  |
