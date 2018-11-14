@@ -38,10 +38,11 @@ def write_csv(data, name):
         writer = csv.writer(f)
         writer.writerow(data)
 
-def write_file(url, name):
-    data = new_get_news(url, name)
-    for i in data:
-        write_csv(i,name)
+def write_file(url, names):
+    data_list = new_get_news(url, names)
+    for index, data in enumerate(data_list):
+        for i in data:
+            write_csv(i,names[index])
 
 def get_proxy():
     proxies_list = [{'http':'http://'+i} for i in ['67.149.217.254:10200',
@@ -62,38 +63,49 @@ def get_proxy():
                 '66.162.122.24'+':'+'8080']]
     return proxies_list[np.random.randint(0, len(proxies_list))]
 
-def new_get_news(url, name):
+def new_get_news(url, names):
     browser = Chrome(executable_path="chromedriver")
-    browser.get(url)
-    search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
-    search_form.send_keys(name)
-    search_form.send_keys(Keys.ENTER)
-    sleep(2)
-    news_target = browser.find_element_by_xpath('''//*[@id="searchPageResultsTabs"]/li[3]/a''')
-    news_target.click()
-    sleep(2)
-    news = []
-    for i in range(20):
-        new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/a''')
-        new_element = new_article.text
-        news.append(new_element)
-    dates = []
-    for i in range(20):
-        new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/div/time''')
-        new_element = new_article.text
-        dates.append(new_element)
+    data_list = []
+    for name in names:
+        browser.get(url)
+        search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
+        search_form.send_keys(name)
+        search_form.send_keys(Keys.ENTER)
+        sleep(2)
+        news_target = browser.find_element_by_xpath('''//*[@id="searchPageResultsTabs"]/li[3]/a''')
+        news_target.click()
+        sleep(2)
+        news = []
+        for i in range(20):
+            new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/a''')
+            new_element = new_article.text
+            news.append(new_element)
+        dates = []
+        for i in range(20):
+            new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/div/time''')
+            new_element = new_article.text
+            dates.append(new_element)
+        data = []
+        for i in range(len(news)):
+            data.append((change_date(dates[i]), news[i]))
+        data_list.append(data)
     browser.close
-    data = []
-    for i in range(len(news)):
-        data.append((dates[i],news[i]))
-    return data
+    return data_list
+
+def change_date(date):
+    if 'назад' in date:
+        result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
+        return result
+    else:
+        return date
 
 
 def main():
     names = ['Магнит', 'Газпром', 'Лукойл']
     url = 'https://ru.investing.com/'
-    for name in names:
-        write_file(url, name)
-
+    #write_file(url, names)
+    string = '14 часов назад'
+    new_string=''
+ 
 if __name__ == '__main__':
      main()
