@@ -1,6 +1,7 @@
 ﻿from multiprocessing import Pool
 import csv
 from datetime import datetime
+from datetime import timedelta
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -94,18 +95,20 @@ def new_get_news(url, names):
 
 def change_date(date):
     if 'назад' in date:
-        result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
+        if [int(s) for s in date.split() if s.isdigit()][0] > datetime.today().hour:
+            result = str(datetime.today().day - 1) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
+        else:
+            result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
         return result
     else:
         return date
 
 
+
 def main():
     names = ['Магнит', 'Газпром', 'Лукойл']
     url = 'https://ru.investing.com/'
-    #write_file(url, names)
-    string = '14 часов назад'
-    new_string=''
- 
+    write_file(url, names)
+
 if __name__ == '__main__':
      main()
