@@ -11,6 +11,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from user_agent import generate_user_agent
 from time import sleep
+from text_fuctions.Change_date import change_date
+from text_fuctions.Lemmatizator.Lemmatizator import lemmatizator
 import numpy as np
  
 def get_news(url):
@@ -18,32 +20,16 @@ def get_news(url):
     r = requests.get(url,headers={'User-Agent': generate_user_agent()},
                                proxies=get_proxy())
     soup = BeautifulSoup(r.text, "html.parser")
-    dives = soup.find('div', class_='js-section-content largeTitle').find_all('div', class_='articleItem')
-    dates = []
-    for dive in dives:
-        date = dive.find('time', class_='date').text
-        dates.append(date)
-    dives = soup.find('div', class_='js-section-content largeTitle').find_all('div', class_='articleItem')
-    news=[]
-    for dive in dives:
-        new = dive.find('a', class_='title').text
-        news.append(new)
-    data=[]
-    for i in range(len(news)):
-        data.append((dates[i],news[i]))
-    return data
-    
-
-def write_csv(data, name):
-    with open('News' + name + '.csv','a') as f:
-        writer = csv.writer(f)
-        writer.writerow(data)
+    div = soup.find('div', class_ = 'js-section-content largeTitle')
+    print(div)
 
 def write_file(url, names):
     data_list = new_get_news(url, names)
     for index, data in enumerate(data_list):
-        for i in data:
-            write_csv(i,names[index])
+        with open('News' + names[index] + '.csv','w') as f:
+            writer = csv.writer(f)
+            for i in data:
+                writer.writerow(i)
 
 def get_proxy():
     proxies_list = [{'http':'http://'+i} for i in ['67.149.217.254:10200',
@@ -88,27 +74,16 @@ def new_get_news(url, names):
             dates.append(new_element)
         data = []
         for i in range(len(news)):
-            data.append((change_date(dates[i]), news[i]))
+            data.append((change_date(dates[i]), lemmatizator(news[i])))
         data_list.append(data)
     browser.close
     return data_list
-
-def change_date(date):
-    if 'назад' in date:
-        if [int(s) for s in date.split() if s.isdigit()][0] > datetime.today().hour:
-            result = str(datetime.today().day - 1) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-        else:
-            result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-        return result
-    else:
-        return date
-
-
 
 def main():
     names = ['Магнит', 'Газпром', 'Лукойл']
     url = 'https://ru.investing.com/'
     write_file(url, names)
+
 
 if __name__ == '__main__':
      main()

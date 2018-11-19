@@ -2,7 +2,7 @@
 
 HOME
 |
-|__FSTOCKParser (Foreign stocks parser)
+|__FSTOCKParser (Foreign stocks parser - not for use now)
 |  |
 |  |__FStocksParser.py
 |  |
@@ -21,6 +21,14 @@ HOME
 |  |  |__NewsParser.py
 |  |  |
 |  |  |__chromedriver
+|  |
+|  |__README.md
+|
+|__StocksParser (Stocks parser)
+|  |
+|  |__Linux
+|  |  |
+|  |  |__StocksParser.py
 |  |
 |  |__README.md
 |
