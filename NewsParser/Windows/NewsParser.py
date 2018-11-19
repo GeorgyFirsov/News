@@ -11,6 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from user_agent import generate_user_agent
 from time import sleep
+from Lemmatizator.Lemmatizator import lemmatizator
 import numpy as np
  
 def get_news(url):
@@ -18,24 +19,11 @@ def get_news(url):
     r = requests.get(url,headers={'User-Agent': generate_user_agent()},
                                proxies=get_proxy())
     soup = BeautifulSoup(r.text, "html.parser")
-    dives = soup.find('div', class_='js-section-content largeTitle').find_all('div', class_='articleItem')
-    dates = []
-    for dive in dives:
-        date = dive.find('time', class_='date').text
-        dates.append(date)
-    dives = soup.find('div', class_='js-section-content largeTitle').find_all('div', class_='articleItem')
-    news=[]
-    for dive in dives:
-        new = dive.find('a', class_='title').text
-        news.append(new)
-    data=[]
-    for i in range(len(news)):
-        data.append((dates[i],news[i]))
-    return data
-    
+    div = soup.find('div', class_ = 'js-section-content largeTitle')
+    print(div)
 
 def write_csv(data, name):
-    with open('News' + name + '.csv','a') as f:
+    with open('News' + name + '.csv','w') as f:
         writer = csv.writer(f)
         writer.writerow(data)
 
@@ -88,7 +76,7 @@ def new_get_news(url, names):
             dates.append(new_element)
         data = []
         for i in range(len(news)):
-            data.append((change_date(dates[i]), news[i]))
+            data.append((change_date(dates[i]), lemmatizator(news[i])))
         data_list.append(data)
     browser.close
     return data_list
@@ -109,6 +97,7 @@ def main():
     names = ['Магнит', 'Газпром', 'Лукойл']
     url = 'https://ru.investing.com/'
     write_file(url, names)
+
 
 if __name__ == '__main__':
      main()
