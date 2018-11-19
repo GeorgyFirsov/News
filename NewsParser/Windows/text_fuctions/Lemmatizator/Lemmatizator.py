@@ -1,11 +1,9 @@
 import pymorphy2
 import string
 
-exclude = set(string.punctuation)
-
-morphy = pymorphy2.MorphAnalyzer()
-
 def lemmatizator(text):
+    exclude = set(string.punctuation)
+    morphy = pymorphy2.MorphAnalyzer()
     text = ''.join(i for i in text if i not in exclude)
     words = text.split()
     new_words = []
