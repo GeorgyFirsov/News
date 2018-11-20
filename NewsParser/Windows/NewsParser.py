@@ -11,8 +11,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from user_agent import generate_user_agent
 from time import sleep
-from text_fuctions.Change_date import change_date
-from text_fuctions.Lemmatizator.Lemmatizator import lemmatizator
+from text_processing import change_date
+from text_processing import lemmatizator
 import numpy as np
  
 def get_news(url):

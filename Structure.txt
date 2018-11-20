@@ -14,11 +14,15 @@ HOME
 |  |  |
 |  |  |__NewsParser.py
 |  |  |
+|  |  |__text_processing.py
+|  |  |
 |  |  |__chromedriver
 |  |
 |  |__Windows
 |  |  |
 |  |  |__NewsParser.py
+|  |  |
+|  |  |__text_processing.py
 |  |  |
 |  |  |__chromedriver
 |  |
@@ -26,9 +30,7 @@ HOME
 |
 |__StocksParser (Stocks parser)
 |  |
-|  |__Linux
-|  |  |
-|  |  |__StocksParser.py
+|  |__StocksParser.py
 |  |
 |  |__README.md
 |
