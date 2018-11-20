@@ -11,8 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from user_agent import generate_user_agent
 from time import sleep
-from text_processing import change_date
-from text_processing import lemmatizator
+import text_processing as txtp
 import numpy as np
  
 def get_news(url):
@@ -74,7 +73,7 @@ def new_get_news(url, names):
             dates.append(new_element)
         data = []
         for i in range(len(news)):
-            data.append((change_date(dates[i]), lemmatizator(news[i])))
+            data.append((txtp.change_date(dates[i]), txtp.lemmatizator(news[i])))
         data_list.append(data)
     browser.close
     return data_list
