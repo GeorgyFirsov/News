@@ -4,6 +4,7 @@ from datetime import datetime
 from datetime import timedelta
 import pandas as pd
 from time import sleep
+from os import getcwd
 
 def make_url(market_, em_, code_, df_, mf_, yf_, from_, dt_, mt_, yt_, to_, f_, p_, e_, cn_, dtf_, tmf_, MSOR_, mstime_, mstimever_):
     url = "http://export.finam.ru/"
@@ -49,7 +50,11 @@ def make_url(market_, em_, code_, df_, mf_, yf_, from_, dt_, mt_, yt_, to_, f_, 
     url += "&sep=1&sep2=1&datf=1&at=1"
     return url
 
-def get_dataFrame():
+def get_dataFrame(fname, path_):
+    if fname == None:
+        raise Exception('Path can not be NULL')
+    if path_ == None:
+        raise Exception('Empty path')
     tdt = datetime.today()
     sdt = tdt - timedelta(days = 7)
     del tdt
@@ -65,7 +70,7 @@ def get_dataFrame():
     yt = datetime.today().year
     market = 1
 
-    Data = pd.read_csv('../company.csv')
+    Data = pd.read_csv(fname)
     Data = Data.drop('Company', axis = 1)
 
     for row in Data.itertuples():
@@ -76,12 +81,9 @@ def get_dataFrame():
         data = data.drop('<PER>', axis = 1)
         data = data.drop('<TIME>', axis = 1)
         data.columns = ['' + i for i in ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']]
-        fname = 'Stocks' + row[1] + ".csv"
-        data.to_csv(fname)
+        toSaveName = path_ + 'Stocks' + row[1] + ".csv"
+        data.to_csv(toSaveName)
         print(row[1] + ' - done')
 
-def main():
-    get_dataFrame()
-
-if __name__ == '__main__':
-    main()
+def main(fname = None, path_ = None):
+    get_dataFrame(fname, path_)

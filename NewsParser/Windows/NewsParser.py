@@ -1,9 +1,22 @@
-﻿from multiprocessing import Pool
+﻿#
+#   Использование:
+#
+#   main принимает два параметра:
+#
+#       fname - путь до файла со списком компаний
+#
+#       path_ - путь сохранения новостей - папка. Оканчивается на \
+#
+#   Запуск возможен только из Main.py в связи с расположением драйвера:
+#
+#           ~\Driver\chromedriver_Windows
+#
+
+from multiprocessing import Pool
 import csv
 from datetime import datetime
 import os
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 import selenium
 from selenium.webdriver import Chrome
@@ -14,20 +27,18 @@ from time import sleep
 from text_processing import change_date
 from text_processing import lemmatizator
 import numpy as np
- 
-def get_news(url):
-    sleep(np.random.random())
-    r = requests.get(url,headers={'User-Agent': generate_user_agent()},
-                               proxies=get_proxy())
-    soup = BeautifulSoup(r.text, "html.parser")
-    div = soup.find('div', class_ = 'js-section-content largeTitle')
-    print(div)
+from os import getcwd
 
-def write_file(url, names):
+def write_file(url, fname, path_):
+    names = get_names(fname)
+    tickers = get_tickers(fname)
+    if path_ == None:
+        raise Exception('Empty path')
     data_list = new_get_news(url, names)
     for index, data in enumerate(data_list):
-        with open('News' + names[index] + '.csv','w', encoding='utf8') as f:
+        with open('News' + tickers[index] + '.csv','w', encoding='utf8') as f:
             writer = csv.writer(f)
+            writer.writerow(('Date', 'New'))
             for i in data:
                 writer.writerow(i)
 
@@ -50,12 +61,21 @@ def get_proxy():
                 '66.162.122.24'+':'+'8080']]
     return proxies_list[np.random.randint(0, len(proxies_list))]
 
-def get_names():
-    df = pd.read_csv("C:/Users/gerko/News/company.csv")
+def get_names(string_):
+    if string_ == None:
+        raise Exception('Path can not be NULL')
+    df = pd.read_csv(string_)
     return df['Company'].values
 
+def get_tickers(string_):
+    if string_ == None:
+        raise Exception('Path can not be NULL')
+    df = pd.read_csv(string_)
+    return df['Ticker'].values
+
+
 def new_get_news(url, names):
-    browser = Chrome(executable_path="chromedriver")
+    browser = Chrome(executable_path = getcwd() + '\\Driver\\chromedriver_Windows')
     data_list = []
     for name in names:
         browser.get(url)
@@ -83,11 +103,6 @@ def new_get_news(url, names):
     browser.close
     return data_list
 
-def main():
-    names = get_names()
+def main(fname = None, path_ = None):
     url = 'https://ru.investing.com/'
-    write_file(url, names)
-
-
-if __name__ == '__main__':
-     main()
+    write_file(url, fname, path_)

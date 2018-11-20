@@ -2,6 +2,14 @@
 
 HOME
 |
+|__Driver
+|  |
+|  |__chromedriver_Linux
+|  |
+|  |__chromedriver_Windows
+|  |
+|  |__chromedriver_Windows.exe
+|
 |__FSTOCKParser (Foreign stocks parser - not for use now)
 |  |
 |  |__FStocksParser.py
@@ -15,16 +23,12 @@ HOME
 |  |  |__NewsParser.py
 |  |  |
 |  |  |__text_processing.py
-|  |  |
-|  |  |__chromedriver
 |  |
 |  |__Windows
 |  |  |
 |  |  |__NewsParser.py
 |  |  |
 |  |  |__text_processing.py
-|  |  |
-|  |  |__chromedriver
 |  |
 |  |__README.md
 |
@@ -33,5 +37,9 @@ HOME
 |  |__StocksParser.py
 |  |
 |  |__README.md
+|
+|__Main.py
+|
+|__company.csv
 |
 |__README.md

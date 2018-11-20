@@ -1,9 +1,22 @@
-﻿from multiprocessing import Pool
+﻿#
+#   Использование:
+#
+#   main принимает два параметра:
+#
+#       fname - путь до файла со списком компаний
+#
+#       path_ - путь сохранения новостей - папка. Оканчивается на \
+#
+#   Запуск возможен только из Main.py в связи с расположением драйвера
+#
+#           ~/Driver/chromedriver_Linux
+#
+
+from multiprocessing import Pool
 import csv
 from datetime import datetime
 from datetime import timedelta
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 import selenium
 from selenium.webdriver import Chrome
@@ -14,19 +27,17 @@ from time import sleep
 from text_processing import change_date
 from text_processing import lemmatizator
 import numpy as np
- 
-def get_news(url):
-    sleep(np.random.random())
-    r = requests.get(url,headers={'User-Agent': generate_user_agent()},
-                               proxies=get_proxy())
-    soup = BeautifulSoup(r.text, "html.parser")
-    div = soup.find('div', class_ = 'js-section-content largeTitle')
-    print(div)
+from os import getcwd
 
-def write_file(url, names):
+def write_file(url, fname, path_):
+    if path_ == None:
+        raise Exception('Empty path')
+    names = get_list_of_companies(fname)
+    tickers = get_tickers(fname)
     data_list = new_get_news(url, names)
     for index, data in enumerate(data_list):
-        with open('News' + names[index] + '.csv','w') as f:
+        with open(path_ + 'News' + tickers[index] + '.csv','w') as f:
+            writer.writerow(('Date', 'New'))
             writer = csv.writer(f)
             for i in data:
                 writer.writerow(i)
@@ -51,7 +62,7 @@ def get_proxy():
     return proxies_list[np.random.randint(0, len(proxies_list))]
 
 def new_get_news(url, names):
-    browser = Chrome(executable_path="../Linux/chromedriver")
+    browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Linux')
     data_list = []
     for name in names:
         browser.get(url)
@@ -80,18 +91,17 @@ def new_get_news(url, names):
     return data_list
 
 def get_list_of_companies(string_):
-    data = pd.read_csv(string_)
-    data = data.drop('Ticker', axis = 1).drop('Number', axis = 1)
-    result = []
-    for row in data.itertuples():
-        result.append(row[1])
-    return result
+    if string_ == None:
+        raise Exception('Path can not be NULL')
+    df = pd.read_csv(string_)
+    return df['Company'].values
 
-def main():
-    names = get_list_of_companies('../../company.csv')
+def get_tickers(string_):
+    if string_ == None:
+        raise Exception('Path can not be NULL')
+    df = pd.read_csv(string_)
+    return df['Ticker'].values
+
+def main(fname = None, path_ = None):
     url = 'https://ru.investing.com/'
-    write_file(url, names)
-
-
-if __name__ == '__main__':
-     main()
+    write_file(url, fname, path_)
