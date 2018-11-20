@@ -37,8 +37,8 @@ def write_file(url, fname, path_):
     data_list = new_get_news(url, names)
     for index, data in enumerate(data_list):
         with open(path_ + 'News' + tickers[index] + '.csv','w') as f:
-            writer.writerow(('Date', 'New'))
             writer = csv.writer(f)
+            writer.writerow(('Date', 'New'))
             for i in data:
                 writer.writerow(i)
 
