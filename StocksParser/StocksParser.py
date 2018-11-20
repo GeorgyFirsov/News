@@ -65,7 +65,7 @@ def get_dataFrame():
     yt = datetime.today().year
     market = 1
 
-    Data = pd.read_csv('../../company.csv')
+    Data = pd.read_csv('../company.csv')
     Data = Data.drop('Company', axis = 1)
 
     for row in Data.itertuples():
