@@ -1,7 +1,7 @@
 ﻿from multiprocessing import Pool
 import csv
 from datetime import datetime
-from datetime import timedelta
+import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -50,6 +50,10 @@ def get_proxy():
                 '66.162.122.24'+':'+'8080']]
     return proxies_list[np.random.randint(0, len(proxies_list))]
 
+def get_names():
+    df = pd.read_csv("C:/Users/gerko/News/company.csv")
+    return df['Company'].values
+
 def new_get_news(url, names):
     browser = Chrome(executable_path="chromedriver")
     data_list = []
@@ -58,10 +62,10 @@ def new_get_news(url, names):
         search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
         search_form.send_keys(name)
         search_form.send_keys(Keys.ENTER)
-        sleep(2)
+        sleep(1)
         news_target = browser.find_element_by_xpath('''//*[@id="searchPageResultsTabs"]/li[3]/a''')
         news_target.click()
-        sleep(2)
+        sleep(1)
         news = []
         for i in range(20):
             new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/a''')
@@ -80,7 +84,7 @@ def new_get_news(url, names):
     return data_list
 
 def main():
-    names = ['Магнит', 'Газпром', 'Лукойл']
+    names = get_names()
     url = 'https://ru.investing.com/'
     write_file(url, names)
 
