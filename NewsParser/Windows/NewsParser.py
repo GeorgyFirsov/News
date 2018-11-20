@@ -26,7 +26,7 @@ def get_news(url):
 def write_file(url, names):
     data_list = new_get_news(url, names)
     for index, data in enumerate(data_list):
-        with open('News' + names[index] + '.csv','w') as f:
+        with open('News' + names[index] + '.csv','w', encoding='utf8') as f:
             writer = csv.writer(f)
             for i in data:
                 writer.writerow(i)
