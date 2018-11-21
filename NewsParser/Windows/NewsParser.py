@@ -36,7 +36,7 @@ def write_file(url, fname, path_):
         raise Exception('Empty path')
     data_list = new_get_news(url, names)
     for index, data in enumerate(data_list):
-        with open('News' + tickers[index] + '.csv','w', encoding='utf8') as f:
+        with open(path_ + 'News' + tickers[index] + '.csv','w', encoding='utf8') as f:
             writer = csv.writer(f)
             writer.writerow(('Date', 'New'))
             for i in data:
@@ -75,7 +75,7 @@ def get_tickers(string_):
 
 
 def new_get_news(url, names):
-    browser = Chrome(executable_path = getcwd() + '\\Driver\\chromedriver_Windows')
+    browser = Chrome(executable_path = getcwd() + '\\Driver\\chromedriver_Windows.exe')
     data_list = []
     for name in names:
         browser.get(url)
@@ -103,6 +103,7 @@ def new_get_news(url, names):
     browser.close
     return data_list
 
-def main(fname = None, path_ = None):
+def main_(fname = None, path_ = None):
+    print(fname + ' ' + path_)
     url = 'https://ru.investing.com/'
     write_file(url, fname, path_)

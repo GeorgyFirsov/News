@@ -64,7 +64,7 @@ def main():
     print('NEWS_DIR   : ' + NEWS_DIR)
     #list_of_companies = pd.read_csv(MAIN_FILE)
     stocksp.main(MAIN_FILE, STOCKS_DIR)
-    newsp.main(MAIN_FILE, NEWS_DIR)
+    newsp.main_(MAIN_FILE, NEWS_DIR)
 
 if __name__ == '__main__':
      main()
