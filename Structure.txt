@@ -6,8 +6,6 @@ HOME
 |  |
 |  |__chromedriver_Linux
 |  |
-|  |__chromedriver_Windows
-|  |
 |  |__chromedriver_Windows.exe
 |
 |__FSTOCKParser (Foreign stocks parser - not for use now)

@@ -6,6 +6,9 @@ import pandas as pd
 from time import sleep
 from os import getcwd
 
+DELAY = 8      # диапазон считывания
+DELTA_DAYS = 7 # начинаем считывать с DELTA_DAYS дней назад
+
 def make_url(market_, em_, code_, df_, mf_, yf_, from_, dt_, mt_, yt_, to_, f_, p_, e_, cn_, dtf_, tmf_, MSOR_, mstime_, mstimever_):
     url = "http://export.finam.ru/"
     url += f_
@@ -56,7 +59,7 @@ def get_dataFrame(fname, path_):
     if path_ == None:
         raise Exception('Empty path')
     tdt = datetime.today()
-    sdt = tdt - timedelta(days = 7)
+    sdt = tdt - timedelta(days = DELTA_DAYS)
     del tdt
     sdt = sdt.date()
     startDate = str(sdt.day) + '.' + str(sdt.month) + '.' + str(sdt.year)
@@ -75,7 +78,7 @@ def get_dataFrame(fname, path_):
 
     for row in Data.itertuples():
         fn = row[1] + str(datetime.today().day) + str(datetime.today().month) + str(datetime.today().year) + str(datetime.now().second) + str(datetime.now().minute) + str(datetime.now().hour)
-        url = make_url(market, row[2], row[1], df, mf, yf, startDate, dt, mt, yt, endDate, fn, 8, '.csv', row[1], 2, 1, 1, 'on', 1)
+        url = make_url(market, row[2], row[1], df, mf, yf, startDate, dt, mt, yt, endDate, fn, DELAY, '.csv', row[1], 2, 1, 1, 'on', 1)
         sleep(1)
         data = read_csv(url)
         data = data.drop('<PER>', axis = 1)
