@@ -64,6 +64,7 @@ def get_proxy():
 def new_get_news(url, names):
     browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Linux')
     data_list = []
+    browser.find_elements_by_class_name()
     for name in names:
         browser.get(url)
         search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
@@ -105,3 +106,4 @@ def get_tickers(string_):
 def main(fname = None, path_ = None):
     url = 'https://ru.investing.com/'
     write_file(url, fname, path_)
+
