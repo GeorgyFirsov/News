@@ -79,7 +79,7 @@ def get_dataFrame(fname, path_):
     for row in Data.itertuples():
         fn = row[1] + str(datetime.today().day) + str(datetime.today().month) + str(datetime.today().year) + str(datetime.now().second) + str(datetime.now().minute) + str(datetime.now().hour)
         url = make_url(market, row[2], row[1], df, mf, yf, startDate, dt, mt, yt, endDate, fn, DELAY, '.csv', row[1], 2, 1, 1, 'on', 1)
-        sleep(1)
+        sleep(0.7)
         data = read_csv(url)
         data = data.drop('<PER>', axis = 1)
         data = data.drop('<TIME>', axis = 1)
