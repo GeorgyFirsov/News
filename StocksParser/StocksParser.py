@@ -5,6 +5,7 @@ from datetime import timedelta
 import pandas as pd
 from time import sleep
 from os import getcwd
+from threading import Thread
 
 DELAY = 8      # диапазон считывания
 DELTA_DAYS = 7 # начинаем считывать с DELTA_DAYS дней назад
@@ -53,6 +54,18 @@ def make_url(market_, em_, code_, df_, mf_, yf_, from_, dt_, mt_, yt_, to_, f_, 
     url += "&sep=1&sep2=1&datf=1&at=1"
     return url
 
+def processing(path_, row, market, df, mf, yf, startDate, dt, mt, yt, endDate):
+    fn = row[1] + str(datetime.today().day) + str(datetime.today().month) + str(datetime.today().year) + str(datetime.now().second) + str(datetime.now().minute) + str(datetime.now().hour)
+    url = make_url(market, row[2], row[1], df, mf, yf, startDate, dt, mt, yt, endDate, fn, DELAY, '.csv', row[1], 2, 1, 1, 'on', 1)
+    sleep(0.8)
+    data = read_csv(url)
+    cols = data.columns
+    data = data.drop(data.columns[[1,3]], axis = 1)
+    data.columns = ['' + i for i in ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']]
+    toSaveName = path_ + 'Stocks' + row[1] + ".csv"
+    data.to_csv(toSaveName)
+    print(row[1] + ' - done')
+
 def get_dataFrame(fname, path_):
     if fname == None:
         raise Exception('Path can not be NULL')
@@ -76,17 +89,20 @@ def get_dataFrame(fname, path_):
     Data = pd.read_csv(fname)
     Data = Data.drop('Company', axis = 1)
 
-    for row in Data.itertuples():
-        fn = row[1] + str(datetime.today().day) + str(datetime.today().month) + str(datetime.today().year) + str(datetime.now().second) + str(datetime.now().minute) + str(datetime.now().hour)
-        url = make_url(market, row[2], row[1], df, mf, yf, startDate, dt, mt, yt, endDate, fn, DELAY, '.csv', row[1], 2, 1, 1, 'on', 1)
-        sleep(0.7)
-        data = read_csv(url)
-        data = data.drop('<PER>', axis = 1)
-        data = data.drop('<TIME>', axis = 1)
-        data.columns = ['' + i for i in ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']]
-        toSaveName = path_ + 'Stocks' + row[1] + ".csv"
-        data.to_csv(toSaveName)
-        print(row[1] + ' - done')
+    threads = []
 
-def main(fname = None, path_ = None):
+    for row in Data.itertuples():
+        nt = Thread(target = processing, args = (path_, row, market, df, mf, yf, startDate, dt, mt, yt, endDate, ))
+        threads.append(nt)
+    
+    count = len(threads)
+
+    for i in range(0, count, 1):
+        if i < count:
+            threads[i].start()
+        if i < count:
+            threads[i].join()
+        
+
+def main_(fname = None, path_ = None):
     get_dataFrame(fname, path_)
