@@ -72,7 +72,7 @@ def main():
     DATE_START = datetime.datetime.today()
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
-        print(str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_START)) + ' : ' + row[2])
+        print(str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)) + ' : ' + row[2])
 
 if __name__ == '__main__':
      main()
