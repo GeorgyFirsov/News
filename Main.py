@@ -67,8 +67,8 @@ def main():
     print('STOCKS_DIR : ' + STOCKS_DIR)
     print('NEWS_DIR   : ' + NEWS_DIR)
     list_of_companies = pd.read_csv(MAIN_FILE)
-    #stocksp.main_(MAIN_FILE, STOCKS_DIR)
-    #newsp.main_(MAIN_FILE, NEWS_DIR)
+    stocksp.main_(MAIN_FILE, STOCKS_DIR)
+    newsp.main_(MAIN_FILE, NEWS_DIR)
     DATE_START = datetime.datetime.today()
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
