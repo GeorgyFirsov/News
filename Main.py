@@ -15,6 +15,7 @@
 #
 
 import pandas as pd
+import datetime
 from os import getcwd
 from os import system
 from sys import platform
@@ -25,6 +26,7 @@ elif platform == "win32":
     path.insert(0, getcwd() + '/NewsParser/Windows')
 import StocksParser.StocksParser as stocksp
 import NewsParser as newsp
+import Algorythms.stocks_check as stocksch
 
 ########################################################################
 ########################### Константы ##################################
@@ -33,6 +35,8 @@ import NewsParser as newsp
 MAIN_FILE = 'company.csv'
 STOCKS_DIR = getcwd()
 NEWS_DIR = getcwd()
+DATE_START = 0
+DATE_CLOSE = 0
 
 ########################################################################
 ########################## Конфигурация ################################
@@ -62,9 +66,13 @@ def main():
     print('MAIN_FILE  : ' + MAIN_FILE)
     print('STOCKS_DIR : ' + STOCKS_DIR)
     print('NEWS_DIR   : ' + NEWS_DIR)
-    #list_of_companies = pd.read_csv(MAIN_FILE)
-    stocksp.main_(MAIN_FILE, STOCKS_DIR)
-    newsp.main_(MAIN_FILE, NEWS_DIR)
+    list_of_companies = pd.read_csv(MAIN_FILE)
+    #stocksp.main_(MAIN_FILE, STOCKS_DIR)
+    #newsp.main_(MAIN_FILE, NEWS_DIR)
+    DATE_START = datetime.datetime.today()
+    DATE_CLOSE = datetime.datetime(2018, 11, 23)
+    for row in list_of_companies.itertuples():
+        print(str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_START)) + ' : ' + row[2])
 
 if __name__ == '__main__':
      main()
