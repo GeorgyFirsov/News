@@ -18,7 +18,7 @@ from datetime import datetime
 import os
 import requests
 import pandas as pd
-import selenium
+from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
@@ -75,7 +75,9 @@ def get_tickers(string_):
 
 
 def new_get_news(url, names):
-    browser = Chrome(executable_path = getcwd() + '\\Driver\\chromedriver_Windows.exe')
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    browser = Chrome(executable_path = getcwd() + '\\Driver\\chromedriver_Windows.exe', chrome_options = options)
     data_list = []
     for name in names:
         browser.get(url)
