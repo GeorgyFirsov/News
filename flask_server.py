@@ -80,7 +80,7 @@ def run():
     list_ = []
     for index, name in enumerate(names):
         list_.append(name + isrised(a[index]))
-    result = '''<!DOCTYPE html><html><head><meta charset="utf-8"><title>Проект NEWS</title><style>body {background: #c7b39b url(https://i.ytimg.com/vi/iYJ2mFlpC20/maxresdefault.jpg); color: #000; height: 500; width: 1000; }</style></head><body><br><i>Предсказания:</i><br>'''
+    result = '''<!DOCTYPE html><html><head><meta charset="utf-8"><title>Предсказания</title><style>body {background: #c7b39b url(https://i.ytimg.com/vi/iYJ2mFlpC20/maxresdefault.jpg); color: #000; height: 500; width: 1000; }</style></head><body><br><b><i>Предсказания:</i></b><br>'''
     for item in list_:
         result += '<br>'
         result += item
