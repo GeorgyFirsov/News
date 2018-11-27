@@ -27,6 +27,8 @@ elif platform == "win32":
 import StocksParser.StocksParser as stocksp
 import NewsParser as newsp
 import Algorythms.stocks_check as stocksch
+from threading import Thread
+from time import sleep
 
 ########################################################################
 ########################### Константы ##################################
@@ -66,13 +68,18 @@ def main():
     print('MAIN_FILE  : ' + MAIN_FILE)
     print('STOCKS_DIR : ' + STOCKS_DIR)
     print('NEWS_DIR   : ' + NEWS_DIR)
+    thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
+    thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
     list_of_companies = pd.read_csv(MAIN_FILE)
-    stocksp.main_(MAIN_FILE, STOCKS_DIR)
-    newsp.main_(MAIN_FILE, NEWS_DIR)
-    DATE_START = datetime.datetime.today()
+    thread1.start()
+    thread2.start()
+    thread1.join()
+    print('\nWaiting for news... It may take a while\n')
+    thread2.join()
+    DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
-        print(str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)) + ' : ' + row[2])
+        print(row[2] + ' change: ' + str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
 
 if __name__ == '__main__':
      main()
