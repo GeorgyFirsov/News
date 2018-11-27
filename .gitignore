@@ -1,6 +1,9 @@
 # ignore parsed data
 StocksP/
 NewsP/
+NewssP/
 StocksP\
 News\
+NewssP\
+__pycache__/
 __pycache__\
