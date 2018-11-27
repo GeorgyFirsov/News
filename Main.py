@@ -110,7 +110,7 @@ def main():
     DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
-        print(row[2] + ' change: ' + str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
+        print(row[2] + ' change: ' + str(stocksch.check_stock(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
     classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
 
 if __name__ == '__main__':

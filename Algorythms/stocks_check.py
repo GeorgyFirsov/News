@@ -5,6 +5,8 @@ def check_stock(path_,stock,date_start,date_close):
     boof1 = 0 # храним конец торгов(значение) для 1 даты
     boof2 = 0 # храним конец торгов(значение) для 2 даты
     boof = 0  # флажочек))0)
+    date_start = convert_date(date_start)
+    date_close = convert_date(date_close)
     name_file = path_ + "Stocks" + stock + ".csv"
     file = pd.read_csv(name_file)
     for row in file.itertuples():
@@ -27,4 +29,4 @@ def convert_date(date):
     return date_new
 
 def main_(path_, stock, start, close):
-    return check_stock(path_, stock, convert_date(start), convert_date(close))
+    check_stock(path_, stock, start, close)

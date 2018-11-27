@@ -19,17 +19,40 @@ if sys.platform == "linux" or sys.platform == "linux2":
 elif sys.platform == "win32":
     sys.path.insert(0, getcwd() + '/NewsParser/Windows')
 from text_processing import lemmatizator
+from threading import Thread
 
 def main_(main_file_path, news_path, newss_path, train_path):
     get_labels(main_file_path, news_path, newss_path, train_path)
 
+def processing(news_path, newss_path, train_path, ticker):
+    df = pd.read_csv(news_path + 'News' + ticker +'.csv')
+    df = text_predict(df, train_path)
+    df.to_csv(newss_path + 'Newss' + ticker + '.csv', encoding = 'utf-8', sep =',', index = False)
+
 def get_labels(main_file_path, news_path, newss_path, train_path):
     list_of_companies = pd.read_csv(main_file_path)
     tickers = list_of_companies.Ticker.values
+    threads = []
     for ticker in tickers:
-        df = pd.read_csv(news_path + 'News' + ticker +'.csv')
-        df = text_predict(df, train_path)
-        df.to_csv(newss_path + 'Newss' + ticker + '.csv', encoding = 'utf-8', sep =',', index = False)
+        newThread = Thread(target = processing, args = (news_path, newss_path, train_path, ticker, ))
+        threads.append(newThread)
+    for i in range(0, len(threads), 4):
+        if i < len(threads):
+            threads[i].start()
+        if i+1 < len(threads):
+            threads[i+1].start()
+        if i+2 < len(threads):
+            threads[i+2].start()
+        if i+3 < len(threads):
+            threads[i+3].start()
+        if i < len(threads):
+            threads[i].join()
+        if i+1 < len(threads):
+            threads[i+1].join()
+        if i+2 < len(threads):
+            threads[i+2].join()
+        if i+3 < len(threads):
+            threads[i+3].join()
 
 #Сюда будем подавать датафрейм из csv файла. Вернется датафрейм, который нужно записать в соответствующий csv файл.
 #Желательно в другой, а не News<Company>.csv
