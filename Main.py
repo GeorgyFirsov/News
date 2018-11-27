@@ -30,6 +30,7 @@ import StocksParser.StocksParser as stocksp
 import NewsParser as newsp
 import Algorythms.stocks_check as stocksch
 import Algorythms.Classification as classify
+import Algorythms.Create_features as features
 from threading import Thread
 from time import sleep
 
@@ -112,6 +113,6 @@ def main():
     for row in list_of_companies.itertuples():
         print(row[2] + ' change: ' + str(stocksch.check_stock(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
     classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
-
+    df1 = features.main_(list_of_companies, NEWS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
 if __name__ == '__main__':
      main()
