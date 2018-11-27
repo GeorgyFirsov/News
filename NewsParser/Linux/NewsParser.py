@@ -28,6 +28,35 @@ from text_processing import change_date
 from text_processing import lemmatizator
 import numpy as np
 from os import getcwd
+from threading import Thread
+
+def processing(url, name, data_list):
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Linux', chrome_options = options)
+    browser.get(url)
+    search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
+    search_form.send_keys(name)
+    search_form.send_keys(Keys.ENTER)
+    sleep(1)
+    news_target = browser.find_element_by_xpath('''//*[@id="searchPageResultsTabs"]/li[3]/a''')
+    news_target.click()
+    sleep(1)
+    news = []
+    for i in range(20):
+        new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/a''')
+        new_element = new_article.text
+        news.append(new_element)
+    dates = []
+    for i in range(20):
+        new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/div/time''')
+        new_element = new_article.text
+        dates.append(new_element)
+    data = []
+    for i in range(len(news)):
+        data.append((change_date(dates[i]), lemmatizator(news[i])))
+    data_list.append(data)
+    browser.close
 
 def write_file(url, fname, path_):
     if path_ == None:
@@ -62,34 +91,28 @@ def get_proxy():
     return proxies_list[np.random.randint(0, len(proxies_list))]
 
 def new_get_news(url, names):
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Linux', chrome_options = options)
     data_list = []
+    threads = []
     for name in names:
-        browser.get(url)
-        search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
-        search_form.send_keys(name)
-        search_form.send_keys(Keys.ENTER)
-        sleep(1)
-        news_target = browser.find_element_by_xpath('''//*[@id="searchPageResultsTabs"]/li[3]/a''')
-        news_target.click()
-        sleep(1)
-        news = []
-        for i in range(20):
-            new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/a''')
-            new_element = new_article.text
-            news.append(new_element)
-        dates = []
-        for i in range(20):
-            new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/div/time''')
-            new_element = new_article.text
-            dates.append(new_element)
-        data = []
-        for i in range(len(news)):
-            data.append((change_date(dates[i]), lemmatizator(news[i])))
-        data_list.append(data)
-    browser.close
+        newThread = Thread(target = processing, args = (url, name, data_list, ))
+        threads.append(newThread)
+    for i in range(0, len(threads), 4):
+        if i < len(threads):
+            threads[i].start()
+        if i+1 < len(threads):
+            threads[i+1].start()
+        if i+2 < len(threads):
+            threads[i+2].start()
+        if i+3 < len(threads):
+            threads[i+3].start()
+        if i < len(threads):
+            threads[i].join()
+        if i+1 < len(threads):
+            threads[i+1].join()
+        if i+2 < len(threads):
+            threads[i+2].join()
+        if i+3 < len(threads):
+            threads[i+3].join()
     return data_list
 
 def get_list_of_companies(string_):
