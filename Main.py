@@ -14,6 +14,8 @@
 #   NEWS_DIR   - директория со спарсенными новостями. Оканчивается на \ или /
 #
 
+DEBUG = 1
+
 import pandas as pd
 import datetime
 from os import getcwd
@@ -29,6 +31,7 @@ import NewsParser as newsp
 import Algorythms.stocks_check as stocksch
 import Algorythms.Classification as classify
 from threading import Thread
+from time import sleep
 
 ########################################################################
 ########################### Константы ##################################
@@ -74,19 +77,36 @@ del createNSD
 ########################################################################
 
 def main():
-    print('MAIN_FILE  : ' + MAIN_FILE)
-    print('STOCKS_DIR : ' + STOCKS_DIR)
-    print('NEWS_DIR   : ' + NEWS_DIR)
-    print('NEWSS_DIR  : ' + NEWSS_DIR)
-    print('TRAIN_PATH : ' + TRAIN_PATH)
-    thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
-    thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
+    if DEBUG == 1:
+        print('MAIN_FILE  : ' + MAIN_FILE)
+        print('STOCKS_DIR : ' + STOCKS_DIR)
+        print('NEWS_DIR   : ' + NEWS_DIR)
+        print('NEWSS_DIR  : ' + NEWSS_DIR)
+        print('TRAIN_PATH : ' + TRAIN_PATH)
+    else:
+        pass
     list_of_companies = pd.read_csv(MAIN_FILE)
-    thread1.start()
-    thread2.start()
-    thread1.join()
-    print('\nWaiting for news... It may take a while\n')
-    thread2.join()
+    print('Would you like to update these files?')
+    while True:
+        print('\n\n    1 - yes\n    2 - no\n\nYour answer: ', end = '')
+        answer=input()
+        try:
+            answer = int(answer)
+            if answer != 1 and answer != 2:
+                continue
+            break
+        except:
+            continue
+    if answer == 1:
+        thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
+        thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
+        thread1.start()
+        thread2.start()
+        thread1.join()
+        print('\nWaiting for news... It may take a while\n')
+        thread2.join()
+    else:
+        pass
     DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
