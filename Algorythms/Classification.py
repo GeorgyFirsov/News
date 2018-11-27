@@ -12,33 +12,37 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score
 from sklearn import grid_search
 import nltk
+from os import getcwd
 import sys
-sys.path.append('C:\\Users\\gerko\\Documents\\Project\\News')
-from NewsParser.Windows.text_processing import lemmatizator
+if sys.platform == "linux" or sys.platform == "linux2":
+    sys.path.insert(0, getcwd() + '/NewsParser/Linux')
+elif sys.platform == "win32":
+    sys.path.insert(0, getcwd() + '/NewsParser/Windows')
+from text_processing import lemmatizator
 
-def main():
-    get_labels()
-def get_labels():
-    company_path = 'C:\\Users\\gerko\\Documents\\Project\\News\\company.csv' #Поменяйте это для себя
-    list_of_companies = pd.read_csv(company_path)
+def main_(main_file_path, news_path, newss_path, train_path):
+    get_labels(main_file_path, news_path, newss_path, train_path)
+
+def get_labels(main_file_path, news_path, newss_path, train_path):
+    list_of_companies = pd.read_csv(main_file_path)
     tickers = list_of_companies.Ticker.values
     for ticker in tickers:
-        df = pd.read_csv('C:\\Users\\gerko\\Documents\\Project\\News\\NewsP\\News' + ticker +'.csv')
-        df = text_predict(df)
-        df.to_csv('C:\\Users\\gerko\\Documents\\Project\\News\\NewssP\\Newss' + ticker + '.csv', encoding = 'utf-8', sep =',', index = False)
+        df = pd.read_csv(news_path + 'News' + ticker +'.csv')
+        df = text_predict(df, train_path)
+        df.to_csv(newss_path + 'Newss' + ticker + '.csv', encoding = 'utf-8', sep =',', index = False)
 
 #Сюда будем подавать датафрейм из csv файла. Вернется датафрейм, который нужно записать в соответствующий csv файл.
 #Желательно в другой, а не News<Company>.csv
-def text_predict(dataframe):
-    list_ = get_objs()
+def text_predict(dataframe, train_path):
+    list_ = get_objs(train_path)
     clf = list_[0]
     vectorizer = list_[1]
     dataframe['label'] = dataframe.New.apply(lambda x: clf.predict(vectorizer.transform([lemmatizator(x)]))[0])
     return dataframe
 
 
-def get_objs():
-    df = pd.read_csv('train.csv', sep =';', encoding='utf-8')
+def get_objs(train_path):
+    df = pd.read_csv(train_path, sep =';', encoding='utf-8')
     vectorizer = CountVectorizer().fit(df['New'])
     features = vectorizer.transform(df['New'])
     clf = LogisticRegression()
@@ -56,6 +60,7 @@ def replace_name(string_):
     return new_string
 
 #Эта функция уже не понадобится. Но на всякий оставлю
+# Not modified!
 def change_train():
     df = pd.read_csv('train.csv', sep =';', encoding='utf-8')
     print('''I've got a data''')
@@ -65,6 +70,7 @@ def change_train():
     df.to_csv('train1.csv', encoding = 'utf-8', sep =';', index = False)
 
 #Эта тоже не понадобится
+# Not modified!
 def get_much_news():
     url = 'https://ru.investing.com/'
     names = ['Ростелеком', 'Сургутнефтегаз','Мегафон', 'М.Видео', 'ФосАгро', 'Уралкалий', 'СОЛЛЕРС', 'KMAZ', 'Энел', 'FIVEDR', 'Интер', 'МТС', 'UNAC']
@@ -96,8 +102,3 @@ def get_much_news():
         except:
             print(name + ''' isn't parsed''')
     df1.to_csv('data.csv', encoding = 'utf-8', index = False)
-
-if __name__ == '__main__':
-    main()
-
-

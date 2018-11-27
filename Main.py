@@ -27,8 +27,8 @@ elif platform == "win32":
 import StocksParser.StocksParser as stocksp
 import NewsParser as newsp
 import Algorythms.stocks_check as stocksch
+import Algorythms.Classification as classify
 from threading import Thread
-from time import sleep
 
 ########################################################################
 ########################### Константы ##################################
@@ -37,6 +37,8 @@ from time import sleep
 MAIN_FILE = 'company.csv'
 STOCKS_DIR = getcwd()
 NEWS_DIR = getcwd()
+NEWSS_DIR = getcwd()
+TRAIN_PATH = getcwd()
 DATE_START = 0
 DATE_CLOSE = 0
 
@@ -47,18 +49,25 @@ DATE_CLOSE = 0
 if platform == "linux" or platform == "linux2":
     STOCKS_DIR += '/StocksP/'
     NEWS_DIR += '/NewsP/'
+    NEWSS_DIR += '/NewssP/'
+    TRAIN_PATH += '/Algorythms/train.csv'
 elif platform == "win32":
     STOCKS_DIR += '\\StocksP\\'
     NEWS_DIR += '\\NewsP\\'
+    NEWSS_DIR += '\\NewssP\\'
+    TRAIN_PATH += '\\Algorythms\\train.csv'
 
 createSD = 'mkdir ' + STOCKS_DIR
 createND = 'mkdir ' + NEWS_DIR
+createNSD = 'mkdir ' + NEWSS_DIR
 
 system(createSD)
 system(createND)
+system(createNSD)
 
 del createSD
 del createND
+del createNSD
 
 ########################################################################
 ##################### Окончание конфигурации ###########################
@@ -68,6 +77,8 @@ def main():
     print('MAIN_FILE  : ' + MAIN_FILE)
     print('STOCKS_DIR : ' + STOCKS_DIR)
     print('NEWS_DIR   : ' + NEWS_DIR)
+    print('NEWSS_DIR  : ' + NEWSS_DIR)
+    print('TRAIN_PATH : ' + TRAIN_PATH)
     thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
     thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
     list_of_companies = pd.read_csv(MAIN_FILE)
@@ -80,6 +91,7 @@ def main():
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
         print(row[2] + ' change: ' + str(stocksch.main_(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
+    classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
 
 if __name__ == '__main__':
      main()
