@@ -14,7 +14,7 @@
 #   NEWS_DIR   - директория со спарсенными новостями. Оканчивается на \ или /
 #
 
-DEBUG = 1
+DEBUG = 0
 
 import pandas as pd
 import datetime
@@ -34,6 +34,8 @@ import Algorythms.Create_features as features
 import Algorythms.Predict as predictor
 from threading import Thread
 from time import sleep
+import warnings
+warnings.filterwarnings('ignore')
 
 ########################################################################
 ########################### Константы ##################################
@@ -106,7 +108,7 @@ def main():
     else:
         pass
     list_of_companies = pd.read_csv(MAIN_FILE)
-    print('Would you like to update these files?')
+    print('\n\nWould you like to update these files?')
     while True:
         print('\n\n    1 - yes\n    2 - no\n\nYour answer: ', end = '')
         answer = input()
@@ -120,11 +122,13 @@ def main():
     update(answer)
     DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
-    for row in list_of_companies.itertuples():
-        print(row[2] + ' change: ' + str(stocksch.check_stock(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
-    print(a)
+    c = list_of_companies.Company.values
+    print('\n')
+    for i in range(0, len(a)):
+        print(c[i] + (lambda x : ' - вырастет' if x == 1 else ' - упадёт')(a[i]))
+    print('\n')
 
    
 if __name__ == '__main__':
