@@ -30,7 +30,7 @@ import numpy as np
 from os import getcwd
 from threading import Thread
 
-def processing(url, name, data_list):
+def processing(url, name, ticker, path_):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Linux', chrome_options = options)
@@ -57,21 +57,19 @@ def processing(url, name, data_list):
     data = []
     for i in range(len(news)):
         data.append((replace_shit(change_date(dates[i])), lemmatizator(news[i])))
-    data_list.append(data)
+    with open(path_ + 'News' + ticker + '.csv','w') as f:
+        writer = csv.writer(f)
+        writer.writerow(('Date', 'New'))
+        for i in data:
+            writer.writerow(i)
     browser.close()
+    print(name + ' - done')
 
 def write_file(url, fname, path_):
-    names = get_names(fname)
-    tickers = get_tickers(fname)
     if path_ == None:
         raise Exception('Empty path')
-    data_list = new_get_news(url, names)
-    for index, data in enumerate(data_list):
-        with open(path_ + 'News' + tickers[index] + '.csv','w', encoding='utf8') as f:
-            writer = csv.writer(f)
-            writer.writerow(('Date', 'New'))
-            for i in data:
-                writer.writerow(i)
+    names = get_list_of_companies(fname)
+    new_get_news(url, names, path_)
 
 def get_proxy():
     proxies_list = [{'http':'http://'+i} for i in ['67.149.217.254:10200',
@@ -92,11 +90,11 @@ def get_proxy():
                 '66.162.122.24'+':'+'8080']]
     return proxies_list[np.random.randint(0, len(proxies_list))]
 
-def get_names(string_):
+def get_list_of_companies(string_):
     if string_ == None:
         raise Exception('Path can not be NULL')
     df = pd.read_csv(string_)
-    return df['Company'].values
+    return df
 
 def get_tickers(string_):
     if string_ == None:
@@ -109,11 +107,12 @@ def replace_shit(string_):
     return new_string
 
 
-def new_get_news(url, names):
-    data_list = []
+def new_get_news(url, data_frame, path_):
     threads = []
-    for name in names:
-        newThread = Thread(target = processing, args = (url, name, data_list, ))
+    names = data_frame.Company.values
+    tickers = data_frame.Ticker.values
+    for index, name in enumerate(names):
+        newThread = Thread(target = processing, args = (url, name, tickers[index], path_, ))
         threads.append(newThread)
     for i in range(0, len(threads), 4):
         if i < len(threads):
@@ -132,7 +131,6 @@ def new_get_news(url, names):
             threads[i+2].join()
         if i+3 < len(threads):
             threads[i+3].join()
-    return data_list
 
 def main_(fname = None, path_ = None):
     print(fname + ' ' + path_)

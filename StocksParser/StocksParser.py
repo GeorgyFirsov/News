@@ -5,7 +5,6 @@ from datetime import timedelta
 import pandas as pd
 from time import sleep
 from os import getcwd
-from threading import Thread
 
 DELAY = 8      # диапазон считывания
 DELTA_DAYS = 7 # начинаем считывать с DELTA_DAYS дней назад
@@ -89,20 +88,8 @@ def get_dataFrame(fname, path_):
     Data = pd.read_csv(fname)
     Data = Data.drop('Company', axis = 1)
 
-    threads = []
-
     for row in Data.itertuples():
-        nt = Thread(target = processing, args = (path_, row, market, df, mf, yf, startDate, dt, mt, yt, endDate, ))
-        threads.append(nt)
-    
-    count = len(threads)
-
-    for i in range(0, count, 1):
-        if i < count:
-            threads[i].start()
-        if i < count:
-            threads[i].join()
-        
+        processing(path_, row, market, df, mf, yf, startDate, dt, mt, yt, endDate)        
 
 def main_(fname = None, path_ = None):
     get_dataFrame(fname, path_)

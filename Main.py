@@ -31,6 +31,7 @@ import NewsParser as newsp
 import Algorythms.stocks_check as stocksch
 import Algorythms.Classification as classify
 import Algorythms.Create_features as features
+import Algorythms.Predict as predictor
 from threading import Thread
 from time import sleep
 
@@ -43,6 +44,7 @@ STOCKS_DIR = getcwd()
 NEWS_DIR = getcwd()
 NEWSS_DIR = getcwd()
 TRAIN_PATH = getcwd()
+PICKLE_PATH = getcwd()
 DATE_START = 0
 DATE_CLOSE = 0
 
@@ -55,11 +57,13 @@ if platform == "linux" or platform == "linux2":
     NEWS_DIR += '/NewsP/'
     NEWSS_DIR += '/NewssP/'
     TRAIN_PATH += '/Algorythms/train.csv'
+    PICKLE_PATH += '/Algorythms/Predictor.pickle'
 elif platform == "win32":
     STOCKS_DIR += '\\StocksP\\'
     NEWS_DIR += '\\NewsP\\'
     NEWSS_DIR += '\\NewssP\\'
     TRAIN_PATH += '\\Algorythms\\train.csv'
+    PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
 
 createSD = 'mkdir ' + STOCKS_DIR
 createND = 'mkdir ' + NEWS_DIR
@@ -77,6 +81,17 @@ del createNSD
 ##################### Окончание конфигурации ###########################
 ########################################################################
 
+def update(paremeter):
+    if paremeter == 2:
+        return
+    thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
+    thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
+    thread1.start()
+    thread2.start()
+    thread1.join()
+    print('\nWaiting for news... It may take a while\n')
+    thread2.join()
+
 def main():
     if DEBUG == 1:
         print('MAIN_FILE  : ' + MAIN_FILE)
@@ -90,7 +105,7 @@ def main():
     print('Would you like to update these files?')
     while True:
         print('\n\n    1 - yes\n    2 - no\n\nYour answer: ', end = '')
-        answer=input()
+        answer = input()
         try:
             answer = int(answer)
             if answer != 1 and answer != 2:
@@ -98,21 +113,15 @@ def main():
             break
         except:
             continue
-    if answer == 1:
-        thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
-        thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
-        thread1.start()
-        thread2.start()
-        thread1.join()
-        print('\nWaiting for news... It may take a while\n')
-        thread2.join()
-    else:
-        pass
+    update(answer)
     DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
         print(row[2] + ' change: ' + str(stocksch.check_stock(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
     classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
-    df1 = features.main_(list_of_companies, NEWS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
+    df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
+    a = predictor.prediction(PICKLE_PATH, df1)
+    print(a)
+    
 if __name__ == '__main__':
      main()
