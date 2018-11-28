@@ -81,10 +81,10 @@ del createNSD
 ##################### Окончание конфигурации ###########################
 ########################################################################
 
-def update(paremeter):
-    if paremeter == 2:
+def update(parameter):
+    if parameter == '2':
         return ' '
-    if parameter != 1:
+    if parameter != '1':
         return 'Allowed answers: 1 or 2'
     thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
     thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
@@ -94,7 +94,7 @@ def update(paremeter):
     print('\nWaiting for news... It may take a while\n')
     thread2.join()
     classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
-    return ' '
+    return 'Updated'
 
 def main():
     if DEBUG == 1:

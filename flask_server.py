@@ -61,8 +61,7 @@ def hello():
 
 @app.route("/update/<number>")
 def update_data(number):
-    Main.update(number)
-    return '<HTML><BODY>Updated</BODY></HTML>'
+    return Main.update(number)
 
 def isrised(number):
     if (number == 1):
