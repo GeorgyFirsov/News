@@ -125,6 +125,7 @@ def main():
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
     print(a)
-    
+
+   
 if __name__ == '__main__':
      main()
