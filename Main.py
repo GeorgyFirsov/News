@@ -91,6 +91,7 @@ def update(paremeter):
     thread1.join()
     print('\nWaiting for news... It may take a while\n')
     thread2.join()
+    classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
 
 def main():
     if DEBUG == 1:
@@ -118,7 +119,6 @@ def main():
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     for row in list_of_companies.itertuples():
         print(row[2] + ' change: ' + str(stocksch.check_stock(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
-    classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
     print(a)
