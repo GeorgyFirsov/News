@@ -38,25 +38,31 @@ def processing(url, name, data_list):
     search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
     search_form.send_keys(name)
     search_form.send_keys(Keys.ENTER)
-    sleep(1)
-    news_target = browser.find_element_by_xpath('''//*[@id="searchPageResultsTabs"]/li[3]/a''')
-    news_target.click()
-    sleep(1)
+    search_form = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
+    search_form.click()
+    search_form = browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
+    search_form.click()
     news = []
-    for i in range(20):
-        new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/a''')
-        new_element = new_article.text
-        news.append(new_element)
     dates = []
-    for i in range(20):
-        new_article = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[4]/div[3]/div/div[''' + str(i+1) + ''']/div/div/time''')
-        new_element = new_article.text
-        dates.append(new_element)
+    pages_table = browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
+    for i in range(2):
+        pages_table.find_element_by_link_text(str(i+1)).click()
+        table = browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
+        articles = table.find_elements_by_class_name('articleItem')
+        for article in articles:
+            text = article.find_element_by_class_name('textDiv').find_element_by_tag_name('a').text
+            date = article.find_element_by_class_name('articleDetails').find_element_by_class_name('date').text
+            news.append(text)
+            dates.append(date)
     data = []
     for i in range(len(news)):
         data.append((change_date(dates[i]), lemmatizator(news[i])))
     data_list.append(data)
     browser.close
+
+def replace_shit(string_):
+    new_string = string_.replace(' - ','')
+    return new_string
 
 def write_file(url, fname, path_):
     if path_ == None:
