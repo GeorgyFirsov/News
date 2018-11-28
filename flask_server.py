@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, json
 import Main
 import pandas as pd
 import datetime
@@ -57,11 +57,12 @@ del createNSD
 
 @app.route("/")
 def hello():
-    pass
+    return render_template('instruction.html')
 
 @app.route("/update/<number>")
 def update_data(number):
     Main.update(number)
+    return '<HTML><BODY>Updated</BODY></HTML>'
 
 def isrised(number):
     if (number == 1):
@@ -75,12 +76,17 @@ def run():
     names = list(list_of_companies.Company.values)
     DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
-    for row in list_of_companies.itertuples():
-        print(row[2] + ' change: ' + str(stocksch.check_stock(STOCKS_DIR, str(row[2]), DATE_START, DATE_CLOSE)))
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
+    list_ = []
     for index, name in enumerate(names):
-        print(name + isrised(a[index]))
+        list_.append(name + isrised(a[index]))
+    result = '<br><i>Предсказания:</i><br>'
+    for item in list_:
+        result += '<br>'
+        result += item
+    result += '<br><br>'
+    return json.dumps(result, ensure_ascii = False)
 
 if __name__ == "__main__":
     app.run()
