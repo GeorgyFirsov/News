@@ -33,7 +33,7 @@ from threading import Thread
 def processing(url, name, ticker, path_):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
-    browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Linux', chrome_options = options)
+    browser = Chrome(executable_path = getcwd() + '/Driver/chromedriver_Windows.exe', chrome_options = options)
     browser.get(url)
     search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
     search_form.send_keys(name)
