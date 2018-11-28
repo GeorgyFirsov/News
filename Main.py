@@ -88,13 +88,9 @@ def update(parameter):
         return ' '
     if parameter != '1':
         return 'Allowed answers: 1 or 2'
-    thread1 = Thread(target = stocksp.main_, args = (MAIN_FILE, STOCKS_DIR, ))
-    thread2 = Thread(target = newsp.main_, args = (MAIN_FILE, NEWS_DIR, ))
-    thread1.start()
-    thread2.start()
-    thread1.join()
+    stocksp.main_(MAIN_FILE, STOCKS_DIR)
     print('\nWaiting for news... It may take a while\n')
-    thread2.join()
+    newsp.main_(MAIN_FILE, NEWS_DIR)
     classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
     return 'Updated'
 
@@ -119,7 +115,7 @@ def main():
             break
         except:
             continue
-    update(answer)
+    update(str(answer))
     DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
     DATE_CLOSE = datetime.datetime(2018, 11, 23)
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
