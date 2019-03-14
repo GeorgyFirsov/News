@@ -1,14 +1,12 @@
 from sklearn.pipeline import Pipeline
 import pickle
 from sklearn.naive_bayes import GaussianNB
-from sklearn import cross_validation
 import xgboost
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 from sklearn import datasets
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.pipeline import Pipeline
 from sklearn.linear_model import Lasso, RidgeCV, LassoCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import PolynomialFeatures
@@ -26,6 +24,5 @@ def prediction(pickle_path, data):
     with open(pickle_path, 'rb') as f:
         Predictor = pickle.load(f)
     data_ready = data.drop(['Company'], axis = 1).values
-    # scaler
     y_pred = Predictor.predict(data_ready)
     return y_pred

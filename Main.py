@@ -95,7 +95,7 @@ def update(parameter):
     return 'Updated'
 
 def main():
-    if DEBUG == 1:
+    if DEBUG:
         print('MAIN_FILE  : ' + MAIN_FILE)
         print('STOCKS_DIR : ' + STOCKS_DIR)
         print('NEWS_DIR   : ' + NEWS_DIR)
@@ -116,13 +116,11 @@ def main():
         except:
             continue
     update(str(answer))
-    DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
-    DATE_CLOSE = datetime.datetime(2018, 11, 23)
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
     c = list_of_companies.Company.values
     print('\n')
-    for i in range(0, len(a)):
+    for i in range(len(a)):
         print(c[i] + (lambda x : ' - вырастет' if x == 1 else ' - упадёт')(a[i]))
     print('\n')
 

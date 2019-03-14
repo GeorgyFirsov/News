@@ -73,8 +73,6 @@ def isrised(number):
 def run():
     list_of_companies = pd.read_csv(MAIN_FILE)
     names = list(list_of_companies.Company.values)
-    DATE_START = datetime.datetime.today() - datetime.timedelta(days = 1)
-    DATE_CLOSE = datetime.datetime(2018, 11, 23)
     df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
     list_ = []

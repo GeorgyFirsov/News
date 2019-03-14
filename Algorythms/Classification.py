@@ -10,7 +10,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score
-from sklearn import grid_search
 import nltk
 from os import getcwd
 import sys
