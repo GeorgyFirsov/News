@@ -12,5 +12,5 @@ This program uses some machine learning technologies to predict increasing or de
 * Clone repo onto your local machine (no matter running Windows or Linux)
 * Run following command:
 ```
-python ./main.py
+python ./Main.py
 ```
