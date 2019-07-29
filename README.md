@@ -14,7 +14,7 @@ This program uses some machine learning technologies to predict increasing or de
 * [Irina Prokopenko](https://github.com/shybotan)
 
 **Usage**
-* Make sure you have Python 3 and above installed
+* Make sure you have Python 3 (or higher) installed
 * Clone repo onto your local machine (no matter running Windows or Linux)
 * Run following command:
 ```bash
