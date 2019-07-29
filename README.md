@@ -11,6 +11,6 @@ This program uses some machine learning technologies to predict increasing or de
 * Make sure you have Python 3 and above installed
 * Clone repo onto your local machine (no matter running Windows or Linux)
 * Run following command:
-```
+```bash
 python ./Main.py
 ```
