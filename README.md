@@ -3,6 +3,8 @@
 
 This program uses some machine learning technologies to predict increasing or decreasing of stocks in the nearest 2-3 days.
 
+**There are some problems running under PyCharm. Use terminal :)**
+
 <span style="color:red"> **Windows currently unsupported** </span>
 
 **Code refactoring in progress**
