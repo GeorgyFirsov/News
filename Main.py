@@ -23,10 +23,10 @@ import Algorythms.Predict as predictor
 
 DEBUG = 0
 
-if platform == "linux" or platform == "linux2":
-	path.insert(0, getcwd() + '/NewsParser/Linux')
-elif platform == "win32":
+if platform == "win32":
 	path.insert(0, getcwd() + '/NewsParser/Windows')
+else: # Linux and Mac OS X
+	path.insert(0, getcwd() + '/NewsParser/Linux')
 
 warnings.filterwarnings('ignore')
 
@@ -47,7 +47,6 @@ if platform == "win32":
 	NEWSS_DIR += '\\NewssP\\'
 	TRAIN_PATH += '\\Algorythms\\train.csv'
 	PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
-	
 else: # Linux and Mac OS X
 	STOCKS_DIR += '/StocksP/'
 	NEWS_DIR += '/NewsP/'
@@ -55,9 +54,9 @@ else: # Linux and Mac OS X
 	TRAIN_PATH += '/Algorythms/train.csv'
 	PICKLE_PATH += '/Algorythms/Predictor.pickle'
 
-system('mkdir ' + STOCKS_DIR)
-system('mkdir ' + NEWS_DIR)
-system('mkdir ' + NEWSS_DIR)
+system('mkdir ' + STOCKS_DIR + ' > nul')
+system('mkdir ' + NEWS_DIR + ' > nul')
+system('mkdir ' + NEWSS_DIR + ' > nul')
 
 #
 # Useful constants
@@ -90,7 +89,9 @@ def update():
 		
 	if answer == 2:
 		return
-
+	
+	print("\n", end='')
+	
 	stocksp.main_(MAIN_FILE, STOCKS_DIR)
 	print('\nWaiting for news... It may take a while\n')
 	newsp.main_(MAIN_FILE, NEWS_DIR)
