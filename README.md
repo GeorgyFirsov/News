@@ -3,6 +3,8 @@
 
 This program uses some machine learning technologies to predict increasing or decreasing of stocks in the nearest 2-3 days.
 
+<span style="color:red"> **Windows currently unsupported** </span>
+
 **Code refactoring in progress**
 - Code must comply with PEP guidelines
 - Сode should be clear and understandable
