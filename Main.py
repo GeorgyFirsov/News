@@ -25,7 +25,7 @@ DEBUG = 0
 
 if platform == "win32":
 	path.insert(0, getcwd() + '\\NewsParser\\Windows')
-else: # Linux and Mac OS X
+else:  # Linux and Mac OS X
 	path.insert(0, getcwd() + '/NewsParser/Linux')
 
 warnings.filterwarnings('ignore')
@@ -40,14 +40,14 @@ NEWSS_DIR 	= getcwd()		# Directory with processed news. Ends with '\' or '/'.
 TRAIN_PATH 	= getcwd()		# Path to train set.
 PICKLE_PATH	= getcwd()		# Path to predicktor binary file
 MAIN_FILE 	= 'company.csv' 	# Path to list of companies.
-    
+
 if platform == "win32":
 	STOCKS_DIR += '\\StocksP\\'
 	NEWS_DIR += '\\NewsP\\'
 	NEWSS_DIR += '\\NewssP\\'
 	TRAIN_PATH += '\\Algorythms\\train.csv'
 	PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
-else: # Linux and Mac OS X
+else:  # Linux and Mac OS X
 	STOCKS_DIR += '/StocksP/'
 	NEWS_DIR += '/NewsP/'
 	NEWSS_DIR += '/NewssP/'
@@ -65,9 +65,11 @@ system('mkdir ' + NEWSS_DIR + ' > nul')
 DATE_START = 0
 DATE_CLOSE = 0
 
+
 #
 # Implementation
 #
+
 
 def update():
 	"""This function asks user if he or 
@@ -96,8 +98,7 @@ def update():
 	print('\nОжидание новостей... Это может занять некоторое время\n')
 	newsp.main_(MAIN_FILE, NEWS_DIR)
 	classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
-	
-	
+
 
 if __name__ == '__main__':
 	"""Main code of this file
@@ -123,7 +124,7 @@ if __name__ == '__main__':
 	
 	print("\n")
 	
-	valueToString = lambda value : "вырастет" if value == 1 else "упадёт"
+	valueToString = lambda value: "вырастет" if value == 1 else "упадёт"
 	
 	for name, prediction in zip(names, predictions):
 		print("{} - {}".format(name, valueToString(prediction)))
