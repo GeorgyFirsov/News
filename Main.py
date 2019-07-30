@@ -24,7 +24,7 @@ import Algorythms.Predict as predictor
 DEBUG = 0
 
 if platform == "win32":
-	path.insert(0, getcwd() + '/NewsParser/Windows')
+	path.insert(0, getcwd() + '\\NewsParser\\Windows')
 else: # Linux and Mac OS X
 	path.insert(0, getcwd() + '/NewsParser/Linux')
 
@@ -75,8 +75,8 @@ def update():
 	If the answer is 'yes' performs update
 	"""
 	
-	print('\n\nWould you like to update these files?')
-	print('\t1 - yes\n\t2 - no')
+	print('\n\nОбновить данные?')
+	print('\t1 - да\n\t2 - нет')
 	
 	answer = 0
 	while answer != 1 and answer != 2:
@@ -93,7 +93,7 @@ def update():
 	print("\n", end='')
 	
 	stocksp.main_(MAIN_FILE, STOCKS_DIR)
-	print('\nWaiting for news... It may take a while\n')
+	print('\nОжидание новостей... Это может занять некоторое время\n')
 	newsp.main_(MAIN_FILE, NEWS_DIR)
 	classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
 	
