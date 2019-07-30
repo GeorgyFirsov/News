@@ -19,10 +19,10 @@ from sklearn.tree import DecisionTreeClassifier
 from os import getcwd
 from sys import platform
 
+
 def prediction(pickle_path, data):
-    Predictor = None
     with open(pickle_path, 'rb') as f:
-        Predictor = pickle.load(f)
-    data_ready = data.drop(['Company'], axis = 1).values
-    y_pred = Predictor.predict(data_ready)
+        predictor = pickle.load(f)
+    data_ready = data.drop(['Company'], axis=1).values
+    y_pred = predictor.predict(data_ready)
     return y_pred
