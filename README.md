@@ -20,3 +20,11 @@ This program uses some machine learning technologies to predict increasing or de
 ```bash
 python ./Main.py
 ```
+There should arise some errors. If not - that's it.
+Otherwise run following commands:
+```bash
+pip install selenium
+pip install user_agent
+pip install pymorphy2
+pip install xgboost
+```
