@@ -14,19 +14,6 @@ import Algorythms.Predict as predictor
 
 
 #
-# Debugging
-#
-
-
-DEBUG = 0
-
-
-def trace(string):
-	if DEBUG:
-		print('Debugging message: ' + string)
-
-
-#
 # Configuration
 #
 
@@ -40,6 +27,19 @@ else:  # Linux and Mac OS X
 import NewsParser as newsp
 
 warnings.filterwarnings('ignore')
+
+
+#
+# Debugging
+#
+
+
+DEBUG = 0
+
+
+def trace(string):
+	if DEBUG:
+		print('Debugging message: ' + string)
 
 
 #
