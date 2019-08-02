@@ -5,8 +5,6 @@ from sys import platform, path
 
 import pandas as pd
 
-# use stocksp.func() to invoke func() from StocksParser
-# use newsp.func() to invoke func() from NewsParser
 import StocksParser.StocksParser as stocksp
 import Algorythms.Classification as classify
 import Algorythms.Create_features as features
