@@ -50,19 +50,19 @@ NEWS_DIR 	= getcwd() 		# Directory with parced news. Ends with '\' or '/'.
 NEWSS_DIR 	= getcwd()		# Directory with processed news. Ends with '\' or '/'.
 TRAIN_PATH 	= getcwd()		# Path to train set.
 PICKLE_PATH	= getcwd()		# Path to predictor binary file
-MAIN_FILE 	= 'company.csv' 	# Path to list of companies.
+MAIN_FILE 	= 'company.csv' # Path to list of companies.
 
 if platform == "win32":
-	STOCKS_DIR += '\\StocksP\\'
-	NEWS_DIR += '\\NewsP\\'
-	NEWSS_DIR += '\\NewssP\\'
-	TRAIN_PATH += '\\Algorythms\\train.csv'
+	STOCKS_DIR	+= '\\StocksP\\'
+	NEWS_DIR 	+= '\\NewsP\\'
+	NEWSS_DIR 	+= '\\NewssP\\'
+	TRAIN_PATH 	+= '\\Algorythms\\train.csv'
 	PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
 else:  # Linux and Mac OS X
-	STOCKS_DIR += '/StocksP/'
-	NEWS_DIR += '/NewsP/'
-	NEWSS_DIR += '/NewssP/'
-	TRAIN_PATH += '/Algorythms/train.csv'
+	STOCKS_DIR 	+= '/StocksP/'
+	NEWS_DIR 	+= '/NewsP/'
+	NEWSS_DIR 	+= '/NewssP/'
+	TRAIN_PATH 	+= '/Algorythms/train.csv'
 	PICKLE_PATH += '/Algorythms/Predictor.pickle'
 
 system('mkdir ' + STOCKS_DIR)
