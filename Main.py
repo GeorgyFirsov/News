@@ -45,11 +45,11 @@ def trace(string):
 #
 
 
-STOCKS_DIR	= getcwd()		# Directory with parced stocks. Ends with '\' or '/'.
-NEWS_DIR 	= getcwd() 		# Directory with parced news. Ends with '\' or '/'.
-NEWSS_DIR 	= getcwd()		# Directory with processed news. Ends with '\' or '/'.
-TRAIN_PATH 	= getcwd()		# Path to train set.
-PICKLE_PATH	= getcwd()		# Path to predictor binary file
+STOCKS_DIR	= getcwd()	# Directory with parced stocks. Ends with '\' or '/'.
+NEWS_DIR 	= getcwd() 	# Directory with parced news. Ends with '\' or '/'.
+NEWSS_DIR 	= getcwd()	# Directory with processed news. Ends with '\' or '/'.
+TRAIN_PATH 	= getcwd()	# Path to train set.
+PICKLE_PATH	= getcwd()	# Path to predictor binary file
 MAIN_FILE 	= 'company.csv' # Path to list of companies.
 
 if platform == "win32":
