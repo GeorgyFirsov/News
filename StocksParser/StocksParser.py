@@ -52,12 +52,15 @@ def processing(path_, row, market, day_from, month_from, year_from
                    , start_date, day_to, month_to, year_to, end_date, fn
                    , hours_delta, '.csv', row[1], 2, 1, 1, 'on', 1)
 
+    # Wait some time not to be banned
+    # 0.8 sec - shortest experimentally
+    # proved delay
     sleep(0.8)
 
     data = pd.read_csv(url)
 
     data = data.drop(data.columns[[1, 3]], axis=1)
-    data.columns = [title for title in ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']]
+    data.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']
 
     file_name = path_ + 'Stocks' + row[1] + ".csv"
     data.to_csv(file_name)
