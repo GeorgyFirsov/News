@@ -37,6 +37,9 @@ def processing(path_, row, market, day_from, month_from, year_from
     """Receives two dates and ticker, makes request
     to www.finam.ru and saves parsed information
     to *.csv file to file path_.
+
+    :param path_: full path to file to fill with data
+    :param row: item in list of companies (line in file)
     """
 
     # day time delay
@@ -73,6 +76,9 @@ def get_dataframe(file_name, path_):
     directory path, where dataframes should
     be saved.
     Puts parsed dataframes to this folder.
+
+    :param file_name: full path to file with list of companies
+    :param path_: full path to storage
     """
 
     if file_name is None:
