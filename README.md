@@ -3,9 +3,9 @@
 
 This program uses some machine learning technologies to predict increasing or decreasing of stocks in the nearest 2-3 days.
 
-**There are some problems running under PyCharm. Use terminal :)**
+> ⚠ **Attention\!** Windows version is currently broken.
 
-<span style="color:red"> **Windows currently unsupported** </span>
+> ⚠ **Attention\!** Flask server code is currently under refactoring process. It doesn't work now with restructured project.
 
 **Code refactoring in progress**
 - Code must comply with PEP guidelines
