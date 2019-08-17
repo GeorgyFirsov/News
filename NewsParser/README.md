@@ -1,6 +1,12 @@
-# NewsParser.py
+# NewsParser
 
-Реализована функция, которая принимает только список компаний, по которым нужно составить список новостей. 
-Сначала через Selenium на сайте https://ru.investing.com находим страницу с новостями о соответствующей компании.
-Затем эти новости сохраняются в файл вместе с датой. В программе нужно доделать:
-1) Более точную выборку новостей. Например, по запросу "Магнит" программа выведет также новости по Магнитогорску
+This module provides news parsing.
+
+Entry point is `parse` function. Use module like this:
+```python
+import NewsParser.NewsParser as NewsParser
+...
+NewsParser.parse(driver_path, companies_file, news_directory)
+```
+
+This module contains NewsParser class that provides main task - parses news from www.investing.com. But this class is for internal usage only. Just call `parse` function to perform parsing.
