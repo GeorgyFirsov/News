@@ -72,8 +72,7 @@ class NewsParser:
 
         news = []
         dates = []
-
-        # Make 3 attempts to get data
+        
         for i in range(2):
             pages_table.find_element_by_link_text(str(i + 1)).click()
             table = browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
