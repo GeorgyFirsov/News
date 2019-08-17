@@ -6,7 +6,7 @@ import pandas as pd
 
 import StocksParser.StocksParser as StocksParser
 import NewsParser.NewsParser as NewsParser
-import Algorithms.Classification as Classification
+import Algorithms.Classification as Classifier
 import Algorithms.CreateFeatures as Features
 import Algorithms.Predict as Predictor
 from Trace.Trace import trace
@@ -15,6 +15,7 @@ from Trace.Trace import trace
 #
 # Configuration
 #
+
 
 warnings.filterwarnings('ignore')
 debug = False
@@ -81,10 +82,10 @@ def update():
 
     print("\n", end='')
 
-    StocksParser.main(companies_file, stocks_directory)
+    StocksParser.parse(companies_file, stocks_directory)
     print('\nОжидание новостей... Это может занять некоторое время\n')
-    NewsParser.main(driver_path, companies_file, news_directory)
-    Classification.main(companies_file, news_directory, prnews_directory, train_set_path)
+    NewsParser.parse(driver_path, companies_file, news_directory)
+    Classifier.classify(companies_file, news_directory, prnews_directory, train_set_path)
 
 
 def prediction_to_string(value):

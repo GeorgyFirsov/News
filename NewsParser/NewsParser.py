@@ -18,10 +18,10 @@ class NewsParser:
     """This class provides news parsing from site
 
     Fields:
-        url: url to site with news
-        companies_list_file: file with list of companies
-        store_path: path to directory where news will be saved
-        driver_path: relative path to Chrome driver
+        __url: url to site with news
+        __companies_list_file: file with list of companies
+        __store_path: path to directory where news will be saved
+        __driver_path: relative path to Chrome driver
     """
 
     def __init__(self, url, companies_list_file
@@ -35,13 +35,13 @@ class NewsParser:
                 or driver_path is None:
             raise Exception("All paths must be specified")
 
-        self.url = url
-        self.companies_list_file = companies_list_file
-        self.store_path = store_path
-        self.driver_path = driver_path
+        self.__url = url
+        self.__companies_list_file = companies_list_file
+        self.__store_path = store_path
+        self.__driver_path = driver_path
 
         # will be filled in future
-        self.names = None
+        self.__names = None
 
     def parse_news(self):
         """Makes main work of this class
@@ -55,8 +55,8 @@ class NewsParser:
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
 
-        browser = Chrome(executable_path=getcwd() + self.driver_path, chrome_options=options)
-        browser.get(self.url)
+        browser = Chrome(executable_path=getcwd() + self.__driver_path, chrome_options=options)
+        browser.get(self.__url)
 
         search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
         search_form.send_keys(name)
@@ -85,7 +85,7 @@ class NewsParser:
 
         data = [(replace_dash(change_date(date)), lemmatize(event)) for date, event in zip(dates, news)]
 
-        with open(self.store_path + 'News' + ticker + '.csv', 'w') as file:
+        with open(self.__store_path + 'News' + ticker + '.csv', 'w') as file:
             writer = csv.writer(file)
             writer.writerow(('Date', 'New'))
             for row in data:
@@ -95,13 +95,13 @@ class NewsParser:
         print(name + ' - готово')
 
     def __get_companies(self):
-        self.names = pd.read_csv(self.companies_list_file)
-        if self.names is None:
+        self.__names = pd.read_csv(self.__companies_list_file)
+        if self.__names is None:
             raise Exception("Error reading data frame")
 
     def __get_news(self):
-        names = self.names.Company.values
-        tickers = self.names.Ticker.values
+        names = self.__names.Company.values
+        tickers = self.__names.Ticker.values
 
         threads = []
         for ticker, name in zip(tickers, names):
@@ -125,9 +125,11 @@ class NewsParser:
             if i + 3 < len(threads):
                 threads[i + 3].join()
 
+# End of NewsParser class --------------------------------------------------
 
-def main(driver_path, file_name=None, path=None):
-    """Main entry point of file. Called from Main.py
+
+def parse(driver_path, file_name=None, path=None):
+    """Main entry point of module. Called from Main.py
 
     :param driver_path: relative path to Chrome driver
     :param file_name: file with list of companies

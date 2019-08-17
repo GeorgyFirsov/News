@@ -1,118 +1,140 @@
-﻿from selenium.webdriver import Chrome
-from selenium.webdriver.common.keys import Keys
+﻿from threading import Thread
+
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
-from os import getcwd
-import sys
-if sys.platform == "linux" or sys.platform == "linux2":
-    sys.path.insert(0, getcwd() + '/NewsParser/Linux')
-elif sys.platform == "win32":
-    sys.path.insert(0, getcwd() + '/NewsParser/Windows')
+
 from TextProcessing.TextProcessor import lemmatize
-from threading import Thread
-
-def main(main_file_path, news_path, newss_path, train_path):
-    get_labels(main_file_path, news_path, newss_path, train_path)
-
-def processing(news_path, newss_path, train_path, ticker):
-    df = pd.read_csv(news_path + 'News' + ticker +'.csv')
-    df = text_predict(df, train_path)
-    df.to_csv(newss_path + 'Newss' + ticker + '.csv', encoding = 'utf-8', sep =',', index = False)
-
-def get_labels(main_file_path, news_path, newss_path, train_path):
-    list_of_companies = pd.read_csv(main_file_path)
-    tickers = list_of_companies.Ticker.values
-    threads = []
-    for ticker in tickers:
-        newThread = Thread(target = processing, args = (news_path, newss_path, train_path, ticker, ))
-        threads.append(newThread)
-    for i in range(0, len(threads), 4):
-        if i < len(threads):
-            threads[i].start()
-        if i+1 < len(threads):
-            threads[i+1].start()
-        if i+2 < len(threads):
-            threads[i+2].start()
-        if i+3 < len(threads):
-            threads[i+3].start()
-        if i < len(threads):
-            threads[i].join()
-        if i+1 < len(threads):
-            threads[i+1].join()
-        if i+2 < len(threads):
-            threads[i+2].join()
-        if i+3 < len(threads):
-            threads[i+3].join()
-
-#Сюда будем подавать датафрейм из csv файла. Вернется датафрейм, который нужно записать в соответствующий csv файл.
-#Желательно в другой, а не News<Company>.csv
-def text_predict(dataframe, train_path):
-    list_ = get_objs(train_path)
-    clf = list_[0]
-    vectorizer = list_[1]
-    dataframe['label'] = dataframe.New.apply(lambda x: clf.predict(vectorizer.transform([lemmatize(x)]))[0])
-    return dataframe
 
 
-def get_objs(train_path):
-    df = pd.read_csv(train_path, sep =';', encoding='utf-8')
+def make_workers(train_path):
+    """Constructs vectorizer and logistic
+    regression model.
+    They are ready to use."""
+    df = pd.read_csv(train_path, sep=';', encoding='utf-8')
+
     vectorizer = CountVectorizer().fit(df['New'])
     features = vectorizer.transform(df['New'])
-    clf = LogisticRegression()
-    clf.fit(features, df.label)
-    return [clf,vectorizer]
+
+    classifier = LogisticRegression()
+    classifier.fit(features, df.label)
+
+    return classifier, vectorizer
 
 
-#Функция очень долго работает. Думаю, лучше будет просто один раз убрать все имена компаний и сохранить
-def replace_name(string_):
-    names = ['Ростелеком', 'Сургутнефтегаз','Мегафон', 'М.Видео', 'ФосАгро', 'Уралкалий', 'СОЛЛЕРС', 'Камаз', 'Энел', 'X5 Retail Group', 'Интер', 'МТС', 'ОАК','Сбербанк', 'Газпром', 'Яндекс']
-    new_string = string_
-    for name in names:
-        new_string = new_string.replace(lemmatize(name),'')
-        print(name + ' was replaced')
-    return new_string
+class Predictor:
+    """Class that incapsulates prediction call.
 
-#Эта функция уже не понадобится. Но на всякий оставлю
-# Not modified!
-def change_train():
-    df = pd.read_csv('train.csv', sep =';', encoding='utf-8')
-    print('''I've got a data''')
-    df.New = df.New.apply(lemmatize)
-    print('Lemmatization is done')
-    df.New = df.New.apply(replace_name)
-    df.to_csv('train1.csv', encoding = 'utf-8', sep =';', index = False)
+    Fields:
+        __vectorizer: vectorizer
+        __predictor: predictor (e.g. classifier)
+    """
 
-#Эта тоже не понадобится
-# Not modified!
-def get_much_news():
-    url = 'https://ru.investing.com/'
-    names = ['Ростелеком', 'Сургутнефтегаз','Мегафон', 'М.Видео', 'ФосАгро', 'Уралкалий', 'СОЛЛЕРС', 'KMAZ', 'Энел', 'FIVEDR', 'Интер', 'МТС', 'UNAC']
-    browser = Chrome(executable_path = 'chromedriver.exe')
-    df1 = pd.DataFrame({'New':[], 'label': []})
-    for name in names:
-        browser.get(url)
-        try:
-            search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
-            search_form.send_keys(name)
-            search_form.send_keys(Keys.ENTER)
-            search_form = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
-            search_form.click()
-            search_form = browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
-            search_form.click()
-            comp_text = []
-            for i in range(5):
-                browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]/a[''' + str(i+1) + ''']''').click()
-                search_form = browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
-                list_ = search_form.find_elements_by_class_name('articleItem')
-                page_text = []
-                for element in list_:
-                    page_text.append(element.find_element_by_class_name('textDiv').find_element_by_tag_name('a').text)
-                comp_text += page_text
-            print(name + ''' is parsed''')
-            df = pd.DataFrame({'New': comp_text, 'label': [None]*len(comp_text)})
-            df1 = pd.concat([df1, df])
-            print(len(df1))
-        except:
-            print(name + ''' isn't parsed''')
-    df1.to_csv('data.csv', encoding = 'utf-8', index = False)
+    def __init__(self, predictor, vectorizer):
+        self.__predictor = predictor
+        self.__vectorizer = vectorizer
+
+    def predict(self, target):
+        """Calls prediction function
+        on target object.
+
+        :param target: target for prediction
+
+        :return: prediction (e.g. number for classification)
+        """
+        return self.__predictor.predict(self.__transform(target))[0]
+
+    def __transform(self, target):
+        return self.__vectorizer.transform([lemmatize(target)])
+
+# End of Predictor class ---------------------------------------------------
+
+
+class Classifier:
+    """Class that performs main function of this module
+    It classifies news into two classes: bad and good
+
+    Fields:
+        __list_of_companies: list with names of companies
+        __news_path: directory with news
+        __prnews_path: directory to store classified news
+        __train_path: full path to training dataset
+    """
+
+    def __init__(self, companies_list_file, news_path, prnews_path, train_path):
+        """Constructs classifier object.
+        It checks if all field are not empty
+        and if not, throws an exception.
+        """
+
+        if companies_list_file is None \
+                or news_path is None \
+                or prnews_path is None \
+                or train_path is None:
+            raise Exception("All paths must be specified")
+
+        self.__list_of_companies = pd.read_csv(companies_list_file)
+        self.__news_path = news_path
+        self.__prnews_path = prnews_path
+        self.__train_path = train_path
+
+    def classify(self):
+        """Performs main action of this class
+        Predictions will be stored in files
+        in __prnews_path directory.
+        """
+        self.__write_predictions()
+
+    def __write_predictions(self):
+        tickers = self.__list_of_companies.Ticker.values
+
+        threads = []
+        for ticker in tickers:
+            threads.append(Thread(target=self.__process, args=(ticker,)))
+
+        for i in range(0, len(threads), 4):
+            if i < len(threads):
+                threads[i].start()
+            if i + 1 < len(threads):
+                threads[i + 1].start()
+            if i + 2 < len(threads):
+                threads[i + 2].start()
+            if i + 3 < len(threads):
+                threads[i + 3].start()
+            if i < len(threads):
+                threads[i].join()
+            if i + 1 < len(threads):
+                threads[i + 1].join()
+            if i + 2 < len(threads):
+                threads[i + 2].join()
+            if i + 3 < len(threads):
+                threads[i + 3].join()
+
+    def __process(self, ticker):
+        df = pd.read_csv(self.__news_path + 'News' + ticker + '.csv')
+        df = self.__make_predictions(df)
+
+        df.to_csv(self.__prnews_path + 'Newss' + ticker + '.csv', encoding='utf-8', sep=',', index=False)
+
+    def __make_predictions(self, data_frame):
+        classifier, vectorizer = make_workers(self.__train_path)
+
+        predictor = Predictor(classifier, vectorizer)
+        data_frame['label'] = data_frame.New.apply(predictor.predict)
+
+        return data_frame
+
+# End of Classifier class --------------------------------------------------
+
+
+def classify(main_file_path, news_path, newss_path, train_path):
+    """Main entry point of module. Called from Main.py
+
+    :param main_file_path: file with list of companies
+    :param news_path: path to directory with news
+    :param newss_path: path to directory where classified news will be saved
+    :param train_path: path to training dataset
+    """
+
+    classifier = Classifier(main_file_path, news_path, newss_path, train_path)
+    classifier.classify()

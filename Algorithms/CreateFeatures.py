@@ -27,17 +27,17 @@ class FeaturesCreator:
     to directories with classified news and stocks
 
     Fields:
-        tickers: list of tickers
-        names: list of names of companies
-        clnews_directory: path to directory with classified news
-        stocks_directory: path to directory with parsed stocks
+        __tickers: list of tickers
+        __names: list of names of companies
+        __clnews_directory: path to directory with classified news
+        __stocks_directory: path to directory with parsed stocks
     """
 
     def __init__(self, list_of_companies, clnews_directory, stocks_directory):
-        self.tickers = list(list_of_companies.Ticker.values)
-        self.names   = list(list_of_companies.Company.values)
-        self.clnews_directory = clnews_directory
-        self.stocks_directory = stocks_directory
+        self.__tickers = list(list_of_companies.Ticker.values)
+        self.__names   = list(list_of_companies.Company.values)
+        self.__clnews_directory = clnews_directory
+        self.__stocks_directory = stocks_directory
 
     def create(self):
         """Converts classified news and stocks into data frame with features
@@ -52,11 +52,11 @@ class FeaturesCreator:
         negative_number = list()
         change_price = list()
 
-        for ticker in self.tickers:
-            df1 = pd.read_csv(self.clnews_directory + 'Newss' + ticker + '.csv', sep=',', encoding='utf-8')
+        for ticker in self.__tickers:
+            df1 = pd.read_csv(self.__clnews_directory + 'Newss' + ticker + '.csv', sep=',', encoding='utf-8')
             df1.Date = df1.Date.apply(to_datetime_n)
 
-            df2 = pd.read_csv(self.stocks_directory + 'Stocks' + ticker + '.csv', sep=',', encoding='utf-8')
+            df2 = pd.read_csv(self.__stocks_directory + 'Stocks' + ticker + '.csv', sep=',', encoding='utf-8')
             df2['Date'] = df2['Date'].apply(to_datetime_st)
 
             deltas = {
@@ -90,11 +90,13 @@ class FeaturesCreator:
             decrease_list.append(min_moderate)
             change_price.append(change)
 
-        data_frame = pd.DataFrame({'Company': self.names, 'Max_Increase': increase_list
+        data_frame = pd.DataFrame({'Company': self.__names, 'Max_Increase': increase_list
                                   , 'Max_Decrease': decrease_list, 'positive_number': positive_number
                                   , 'negative_number': negative_number, 'Change_prise': change_price})
 
         return data_frame
+
+# End of FeaturesCreator class ---------------------------------------------
 
 
 def create(list_of_companies, clnews_directory, stocks_directory):

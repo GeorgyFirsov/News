@@ -115,5 +115,5 @@ def get_dataframe(file_name, path_):
                    , start_date, day_to, month_to, year_to, end_date)
 
 
-def main(file_name=None, path_=None):
+def parse(file_name=None, path_=None):
     get_dataframe(file_name, path_)
