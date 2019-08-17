@@ -50,19 +50,19 @@ class FeaturesCreator:
             today_week_day = datetime.today().weekday()
 
             start_date = check_date - timedelta(days=deltas[today_week_day][0])
-            end_date = check_date - timedelta(days=deltas[today_week_day][1])
+            end_date   = check_date - timedelta(days=deltas[today_week_day][1])
 
             positive = df1[df1.Date >= start_date][df1.Date <= end_date].label.sum()
-            count = df1[df1.Date >= start_date][df1.Date <= end_date].label.count()
+            count    = df1[df1.Date >= start_date][df1.Date <= end_date].label.count()
 
             positive_number.append(positive)
             negative_number.append(count - positive)
 
-            max_of_high = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['High'].max()
+            max_of_high   = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['High'].max()
             mean_on_close = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['Close'].mean()
-            min_of_low = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['Low'].min()
+            min_of_low    = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['Low'].min()
             mean_on_close_first = df2[df2['Date'] == start_date]['Open'].mean()
-            mean_on_close_last = df2[df2['Date'] == end_date]['Close'].mean()
+            mean_on_close_last  = df2[df2['Date'] == end_date]['Close'].mean()
 
             max_moderate = max_of_high / mean_on_close
             min_moderate = min_of_low / mean_on_close
