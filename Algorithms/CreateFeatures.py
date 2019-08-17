@@ -28,11 +28,11 @@ class FeaturesCreator:
         :return: data frame ready to pass to predictor
         """
 
-        increase_list = list()
-        decrease_list = list()
+        increase_list   = list()
+        decrease_list   = list()
         positive_number = list()
         negative_number = list()
-        change_price = list()
+        change_price    = list()
 
         for ticker in self.__tickers:
             df1 = pd.read_csv(self.__clnews_directory + 'Newss' + ticker + '.csv', sep=',', encoding='utf-8')
