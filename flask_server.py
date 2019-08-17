@@ -12,10 +12,10 @@ elif platform == "win32":
     path.insert(0, getcwd() + '/NewsParser/Windows')
 import StocksParser.StocksParser as stocksp
 import NewsParser as newsp
-import Algorythms.stocks_check as stocksch
-import Algorythms.Classification as classify
-import Algorythms.Create_features as features
-import Algorythms.Predict as predictor
+import Algorithms.stocks_check as stocksch
+import Algorithms.Classification as classify
+import Algorithms.CreateFeatures as features
+import Algorithms.Predict as predictor
 from threading import Thread
 from time import sleep
 
@@ -34,14 +34,14 @@ if platform == "linux" or platform == "linux2":
     STOCKS_DIR += '/StocksP/'
     NEWS_DIR += '/NewsP/'
     NEWSS_DIR += '/NewssP/'
-    TRAIN_PATH += '/Algorythms/train.csv'
-    PICKLE_PATH += '/Algorythms/Predictor.pickle'
+    TRAIN_PATH += '/Algorithms/train.csv'
+    PICKLE_PATH += '/Algorithms/Predictor.pickle'
 elif platform == "win32":
     STOCKS_DIR += '\\StocksP\\'
     NEWS_DIR += '\\NewsP\\'
     NEWSS_DIR += '\\NewssP\\'
-    TRAIN_PATH += '\\Algorythms\\train.csv'
-    PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
+    TRAIN_PATH += '\\Algorithms\\train.csv'
+    PICKLE_PATH += '\\Algorithms\\Predictor.pickle'
 
 createSD = 'mkdir ' + STOCKS_DIR
 createND = 'mkdir ' + NEWS_DIR

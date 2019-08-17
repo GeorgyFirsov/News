@@ -22,8 +22,6 @@ class NewsParser:
         companies_list_file: file with list of companies
         store_path: path to directory where news will be saved
         driver_path: relative path to Chrome driver
-
-    Methods:
     """
 
     def __init__(self, url, companies_list_file
@@ -46,6 +44,10 @@ class NewsParser:
         self.names = None
 
     def parse_news(self):
+        """Makes main work of this class
+        Firstly reads companies from file and than
+        parses news for each of them
+        """
         self.__get_companies()
         self.__get_news()
 

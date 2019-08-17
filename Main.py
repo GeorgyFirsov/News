@@ -1,5 +1,4 @@
 import warnings
-
 from os import getcwd, system
 from sys import platform
 
@@ -7,9 +6,10 @@ import pandas as pd
 
 import StocksParser.StocksParser as StocksParser
 import NewsParser.NewsParser as NewsParser
-import Algorythms.Classification as Classification
-import Algorythms.Create_features as Features
-import Algorythms.Predict as Predictor
+import Algorithms.Classification as Classification
+import Algorithms.CreateFeatures as Features
+import Algorithms.Predict as Predictor
+from Trace.Trace import trace
 
 
 #
@@ -17,19 +17,7 @@ import Algorythms.Predict as Predictor
 #
 
 warnings.filterwarnings('ignore')
-
-#
-# Debugging
-#
-
-
-DEBUG = 0
-
-
-def trace(string):
-    if DEBUG:
-        print('Debugging message: ' + string)
-
+debug = False
 
 #
 # Paths
@@ -48,15 +36,15 @@ if platform == "win32":
     stocks_directory  += '\\StocksP\\'
     news_directory    += '\\NewsP\\'
     prnews_directory  += '\\NewssP\\'
-    train_set_path    += '\\Algorythms\\train.csv'
-    binary_path       += '\\Algorythms\\Predictor.pickle'
+    train_set_path    += '\\Algorithms\\train.csv'
+    binary_path       += '\\Algorithms\\Predictor.pickle'
     driver_path       += 'chromedriver_Windows.exe'
 else:  # Linux and Mac OS X
     stocks_directory  += '/StocksP/'
     news_directory    += '/NewsP/'
     prnews_directory  += '/NewssP/'
-    train_set_path    += '/Algorythms/train.csv'
-    binary_path       += '/Algorythms/Predictor.pickle'
+    train_set_path    += '/Algorithms/train.csv'
+    binary_path       += '/Algorithms/Predictor.pickle'
     driver_path       += 'chromedriver_Linux'
 
 system('mkdir ' + stocks_directory)
@@ -107,19 +95,19 @@ if __name__ == '__main__':
     Performs all the actions of application
     """
 
-    trace('companies_file   : ' + companies_file)
-    trace('stocks_directory : ' + stocks_directory)
-    trace('news_directory   : ' + news_directory)
-    trace('prnews_directory : ' + prnews_directory)
-    trace('train_set_path   : ' + train_set_path)
-    trace('driver_path      : ' + driver_path)
+    trace('companies_file   : ' + companies_file, debug)
+    trace('stocks_directory : ' + stocks_directory, debug)
+    trace('news_directory   : ' + news_directory, debug)
+    trace('prnews_directory : ' + prnews_directory, debug)
+    trace('train_set_path   : ' + train_set_path, debug)
+    trace('driver_path      : ' + driver_path, debug)
 
     list_of_companies = pd.read_csv(companies_file)
 
     update()
 
     # Raw working data
-    data = Features.main(list_of_companies, prnews_directory, stocks_directory)
+    data = Features.create(list_of_companies, prnews_directory, stocks_directory)
 
     predictions = Predictor.prediction(binary_path, data)
     names = list_of_companies.Company.values
