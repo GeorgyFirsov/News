@@ -101,7 +101,7 @@ class FeaturesCreator:
 
 def create(list_of_companies, clnews_directory, stocks_directory):
     """Performs main function of this module - converts
-    parsed data to predictor-friendly data frame
+    parsed data to predictor-friendly data frame.
 
     :param list_of_companies: data frame with list of companies
     :param clnews_directory: path to directory with classified news

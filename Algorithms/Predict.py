@@ -2,12 +2,12 @@ import pickle
 
 
 def prediction(pickle_path, data):
-    """Function converts all parsed data
+    """Function converts prepared data
     to a prediction about stocks using serialized
     earlier predictor
 
     :param pickle_path: full path to serialized predictor object
-    :param data: dataframe with processed news
+    :param data: data frame with processed news
 
     :return: special predicted values in order of companies
     """

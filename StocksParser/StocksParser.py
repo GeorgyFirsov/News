@@ -115,5 +115,11 @@ def get_dataframe(file_name, path_):
                    , start_date, day_to, month_to, year_to, end_date)
 
 
-def parse(file_name=None, path_=None):
-    get_dataframe(file_name, path_)
+def parse(file_name=None, path=None):
+    """Main entry point of module. Called from Main.py.
+
+    :param file_name: file with list of companies
+    :param path: path to directory where stocks will be saved
+    """
+
+    get_dataframe(file_name, path)

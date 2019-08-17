@@ -30,6 +30,7 @@ class NewsParser:
         It checks if all field are not empty
         and if not, throws an exception.
         """
+
         if companies_list_file is None \
                 or store_path is None  \
                 or driver_path is None:
@@ -48,6 +49,7 @@ class NewsParser:
         Firstly reads companies from file and than
         parses news for each of them
         """
+
         self.__get_companies()
         self.__get_news()
 
@@ -129,7 +131,7 @@ class NewsParser:
 
 
 def parse(driver_path, file_name=None, path=None):
-    """Main entry point of module. Called from Main.py
+    """Main entry point of module. Called from Main.py.
 
     :param driver_path: relative path to Chrome driver
     :param file_name: file with list of companies

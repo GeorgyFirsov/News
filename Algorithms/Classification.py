@@ -11,6 +11,7 @@ def make_workers(train_path):
     """Constructs vectorizer and logistic
     regression model.
     They are ready to use."""
+
     df = pd.read_csv(train_path, sep=';', encoding='utf-8')
 
     vectorizer = CountVectorizer().fit(df['New'])
@@ -42,6 +43,7 @@ class Predictor:
 
         :return: prediction (e.g. number for classification)
         """
+
         return self.__predictor.predict(self.__transform(target))[0]
 
     def __transform(self, target):
@@ -83,6 +85,7 @@ class Classifier:
         Predictions will be stored in files
         in __prnews_path directory.
         """
+
         self.__write_predictions()
 
     def __write_predictions(self):
@@ -128,7 +131,7 @@ class Classifier:
 
 
 def classify(main_file_path, news_path, newss_path, train_path):
-    """Main entry point of module. Called from Main.py
+    """Main entry point of module. Called from Main.py.
 
     :param main_file_path: file with list of companies
     :param news_path: path to directory with news
