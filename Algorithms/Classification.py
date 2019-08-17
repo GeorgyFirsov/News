@@ -7,23 +7,6 @@ from sklearn.linear_model import LogisticRegression
 from TextProcessing.TextProcessor import lemmatize
 
 
-def make_workers(train_path):
-    """Constructs vectorizer and logistic
-    regression model.
-    They are ready to use.
-    """
-
-    df = pd.read_csv(train_path, sep=';', encoding='utf-8')
-
-    vectorizer = CountVectorizer().fit(df['New'])
-    features = vectorizer.transform(df['New'])
-
-    classifier = LogisticRegression()
-    classifier.fit(features, df.label)
-
-    return classifier, vectorizer
-
-
 class Predictor:
     """Class that incapsulates prediction call.
 
@@ -129,6 +112,23 @@ class Classifier:
         return data_frame
 
 # End of Classifier class --------------------------------------------------
+
+
+def make_workers(train_path):
+    """Constructs vectorizer and logistic
+    regression model.
+    They are ready to use.
+    """
+
+    df = pd.read_csv(train_path, sep=';', encoding='utf-8')
+
+    vectorizer = CountVectorizer().fit(df['New'])
+    features = vectorizer.transform(df['New'])
+
+    classifier = LogisticRegression()
+    classifier.fit(features, df.label)
+
+    return classifier, vectorizer
 
 
 def classify(main_file_path, news_path, newss_path, train_path):
