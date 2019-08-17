@@ -1,38 +1,61 @@
-import pymorphy2
-import string
-from datetime import datetime
-import pymorphy2
-import string
+from datetime import datetime, timedelta
+
+from string import punctuation
+from pymorphy2 import MorphAnalyzer
+
 
 def lemmatizator(text):
-    exclude = set(string.punctuation)
-    morphy = pymorphy2.MorphAnalyzer()
+    """This function uses pymorphy2 library to convert
+    all words in input text ot normal form for
+    further vectorization. All punctuation marks
+    are ignored and removed form resulting text
+
+    :param text: plain text to lemmatize
+    :return: text after lemmatization: all words were
+             converted to their normal form
+    """
+
+    exclude = set(punctuation)
+    analyzer = MorphAnalyzer()
+
     text = ''.join(i for i in text if i not in exclude)
     words = text.split()
-    new_words = []
+
+    converted_text = str()
     for word in words:
-        new_words.append(morphy.parse(word)[0].normal_form)
-    new_text = ''
-    for word in new_words:
-        new_text += word
-        new_text +=' '
-    return new_text
+        normalized_word = analyzer.parse(word)[0].normal_form
+        converted_text += normalized_word + ' '
+
+    return converted_text
+
 
 def change_date(date):
-    if 'назад' in date:
-        if 'минута' in lemmatizator(date):
-            if [int(s) for s in date.split() if s.isdigit()][0] > datetime.today().minute:
-                if datetime.today().hour == 0:
-                    result = str(datetime.today().day - 1) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-                else:
-                    result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-            else:
-                result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-        else:
-            if [int(s) for s in date.split() if s.isdigit()][0] > datetime.today().hour:
-                result = str(datetime.today().day - 1) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-            else:
-                result = str(datetime.today().day) + '.' + str(datetime.today().month) + '.' + str(datetime.today().year)
-        return result
-    else:
+    """Makes date to be matched the format dd.mm.yyy
+    If format already satisfied does nothing
+    Otherwise converts date to correct format
+
+    :param date: string with date
+    :return: correct date
+    """
+
+    if 'назад' not in date:
         return date
+    else:
+        today = datetime.today()
+        yesterday = today - timedelta(days=1)
+        day, month, year = today.day, today.month, today.year
+
+        date_digits = [int(s) for s in date.split() if s.isdigit()]
+
+        # Necessary to detect yesterday's news
+        # e.g. news was published 15 minutes ago, but now is 00:10 am
+        if 'минута' in lemmatizator(date):
+            if date_digits[0] > today.minute and today.hour == 0:
+                # Yesterday's news
+                day, month, year = yesterday.day, yesterday.month, yesterday.year
+        else:
+            if date_digits[0] > today.hour:
+                # Yesterday's news
+                day, month, year = yesterday.day, yesterday.month, yesterday.year
+
+        return str(day) + '.' + str(month) + '.' + str(year)
