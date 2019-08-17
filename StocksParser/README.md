@@ -1,7 +1,14 @@
-# StocksParser.py
+# StocksParser
 
-Функция читает файл company.csv из главной директории и для каждой компании из файла создаёт файл с котировками за последнюю неделю
+This module provides stocks parsing.
 
-Формат названия файла: Stocks%Company%.csv
+Entry point is `parse` function. Use module like this:
+```python
+import StocksParser.StocksParser as StocksParser
+...
+StocksParser.parse(companies_file, stocks_directory)
+```
 
-Столбцы: 'Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume'
+This module contains StocksParser class that provides main task - parses stocks from www.finam.ru. But this class is for internal usage only. Just call `parse` function to perform parsing.
+
+Name of file with parsed data is: Stocks\<TICKER>.csv
