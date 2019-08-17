@@ -4,7 +4,7 @@ from string import punctuation
 from pymorphy2 import MorphAnalyzer
 
 
-def lemmatizator(text):
+def lemmatize(text):
     """This function uses pymorphy2 library to convert
     all words in input text ot normal form for
     further vectorization. All punctuation marks
@@ -49,7 +49,7 @@ def change_date(date):
 
         # Necessary to detect yesterday's news
         # e.g. news was published 15 minutes ago, but now is 00:10 am
-        if 'минута' in lemmatizator(date):
+        if 'минута' in lemmatize(date):
             if date_digits[0] > today.minute and today.hour == 0:
                 # Yesterday's news
                 day, month, year = yesterday.day, yesterday.month, yesterday.year

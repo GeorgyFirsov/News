@@ -69,6 +69,6 @@ def to_datetime2(number):
     date = datetime(year,month,day)
     return date.date()
 
-def main_(list_of_companies, NEWSS_DIR,STOCKS_DIR):
+def main(list_of_companies, NEWSS_DIR,STOCKS_DIR):
     return create_dataframe(list_of_companies, NEWSS_DIR, STOCKS_DIR)
 

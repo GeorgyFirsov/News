@@ -1,31 +1,22 @@
 import warnings
 
 from os import getcwd, system
-from sys import platform, path
+from sys import platform
 
 import pandas as pd
 
-import StocksParser.StocksParser as stocksp
-import Algorythms.Classification as classify
-import Algorythms.Create_features as features
-import Algorythms.Predict as predictor
+import StocksParser.StocksParser as StocksParser
+import NewsParser.NewsParser as NewsParser
+import Algorythms.Classification as Classification
+import Algorythms.Create_features as Features
+import Algorythms.Predict as Predictor
 
 
 #
 # Configuration
 #
 
-
-if platform == "win32":
-    path.insert(0, getcwd() + '\\NewsParser\\Windows')
-else:  # Linux and Mac OS X
-    path.insert(0, getcwd() + '/NewsParser/Linux')
-
-# MAGIC! It should be here. I know, it's bad :(
-import NewsParser as newsp
-
 warnings.filterwarnings('ignore')
-
 
 #
 # Debugging
@@ -45,25 +36,31 @@ def trace(string):
 #
 
 
-STOCKS_DIR  = getcwd()      # Directory with parced stocks. Ends with '\' or '/'.
-NEWS_DIR    = getcwd()      # Directory with parced news. Ends with '\' or '/'.
+STOCKS_DIR  = getcwd()      # Directory with parsed stocks. Ends with '\' or '/'.
+NEWS_DIR    = getcwd()      # Directory with parsed news. Ends with '\' or '/'.
 NEWSS_DIR   = getcwd()      # Directory with processed news. Ends with '\' or '/'.
 TRAIN_PATH  = getcwd()      # Path to train set.
 PICKLE_PATH = getcwd()      # Path to predictor binary file
 MAIN_FILE   = 'company.csv' # Path to list of companies.
+driver_path = '/Driver/'
 
+# driver_path = '/Driver/chromedriver_Linux' or '/Driver/chromedriver_Windows.exe'
 if platform == "win32":
     STOCKS_DIR  += '\\StocksP\\'
     NEWS_DIR    += '\\NewsP\\'
     NEWSS_DIR   += '\\NewssP\\'
     TRAIN_PATH  += '\\Algorythms\\train.csv'
     PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
+
+    driver_path += 'chromedriver_Windows.exe'
 else:  # Linux and Mac OS X
     STOCKS_DIR  += '/StocksP/'
     NEWS_DIR    += '/NewsP/'
     NEWSS_DIR   += '/NewssP/'
     TRAIN_PATH  += '/Algorythms/train.csv'
     PICKLE_PATH += '/Algorythms/Predictor.pickle'
+
+    driver_path += 'chromedriver_Linux'
 
 system('mkdir ' + STOCKS_DIR)
 system('mkdir ' + NEWS_DIR)
@@ -98,10 +95,10 @@ def update():
 
     print("\n", end='')
 
-    stocksp.main_(MAIN_FILE, STOCKS_DIR)
+    StocksParser.main(MAIN_FILE, STOCKS_DIR)
     print('\nОжидание новостей... Это может занять некоторое время\n')
-    newsp.main_(MAIN_FILE, NEWS_DIR)
-    classify.main_(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
+    NewsParser.main(driver_path, MAIN_FILE, NEWS_DIR)
+    Classification.main(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
 
 
 def prediction_to_string(value):
@@ -121,20 +118,20 @@ if __name__ == '__main__':
     trace('NEWS_DIR   : ' + NEWS_DIR)
     trace('NEWSS_DIR  : ' + NEWSS_DIR)
     trace('TRAIN_PATH : ' + TRAIN_PATH)
-		
+
     list_of_companies = pd.read_csv(MAIN_FILE)
-	
+
     update()
 
     # Raw working data
-    data = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR)
-	
-    predictions = predictor.prediction(PICKLE_PATH, data)
+    data = Features.main(list_of_companies, NEWSS_DIR, STOCKS_DIR)
+
+    predictions = Predictor.prediction(PICKLE_PATH, data)
     names = list_of_companies.Company.values
-	
+
     print("\n")
-	
+
     for name, prediction in zip(names, predictions):
         print("{} - {}".format(name, prediction_to_string(prediction)))
-		
+
     print("")

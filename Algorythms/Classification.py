@@ -1,26 +1,18 @@
-﻿import selenium
-from selenium.webdriver import Chrome
+﻿from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
 import pandas as pd
-import pymorphy2
-import string
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import cross_val_score
-import nltk
 from os import getcwd
 import sys
 if sys.platform == "linux" or sys.platform == "linux2":
     sys.path.insert(0, getcwd() + '/NewsParser/Linux')
 elif sys.platform == "win32":
     sys.path.insert(0, getcwd() + '/NewsParser/Windows')
-from text_processing import lemmatizator
+from TextProcessing.TextProcessor import lemmatize
 from threading import Thread
 
-def main_(main_file_path, news_path, newss_path, train_path):
+def main(main_file_path, news_path, newss_path, train_path):
     get_labels(main_file_path, news_path, newss_path, train_path)
 
 def processing(news_path, newss_path, train_path, ticker):
@@ -59,7 +51,7 @@ def text_predict(dataframe, train_path):
     list_ = get_objs(train_path)
     clf = list_[0]
     vectorizer = list_[1]
-    dataframe['label'] = dataframe.New.apply(lambda x: clf.predict(vectorizer.transform([lemmatizator(x)]))[0])
+    dataframe['label'] = dataframe.New.apply(lambda x: clf.predict(vectorizer.transform([lemmatize(x)]))[0])
     return dataframe
 
 
@@ -77,7 +69,7 @@ def replace_name(string_):
     names = ['Ростелеком', 'Сургутнефтегаз','Мегафон', 'М.Видео', 'ФосАгро', 'Уралкалий', 'СОЛЛЕРС', 'Камаз', 'Энел', 'X5 Retail Group', 'Интер', 'МТС', 'ОАК','Сбербанк', 'Газпром', 'Яндекс']
     new_string = string_
     for name in names:
-        new_string = new_string.replace(lemmatizator(name),'')
+        new_string = new_string.replace(lemmatize(name),'')
         print(name + ' was replaced')
     return new_string
 
@@ -86,7 +78,7 @@ def replace_name(string_):
 def change_train():
     df = pd.read_csv('train.csv', sep =';', encoding='utf-8')
     print('''I've got a data''')
-    df.New = df.New.apply(lemmatizator)
+    df.New = df.New.apply(lemmatize)
     print('Lemmatization is done')
     df.New = df.New.apply(replace_name)
     df.to_csv('train1.csv', encoding = 'utf-8', sep =';', index = False)
