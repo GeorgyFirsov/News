@@ -4,6 +4,65 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 
+class StocksParser:
+    """This class provides stocks parsing from site
+
+    Fields:
+        __file_name: file with list of companies
+        __store_path: path to directory where stocks will be saved
+    """
+
+    def __init__(self, file_name, store_path):
+        """Constructs parser object.
+        It checks if all field are not empty
+        and if not, throws an exception.
+        """
+
+        if file_name is None \
+                or store_path is None:
+            raise Exception("All paths must be specified")
+
+        self.__file_name  = file_name
+        self.__store_path = store_path
+
+    def parse_stocks(self):
+        """Receives file with list of companies and
+        directory path, where data frames should
+        be saved.
+        Puts parsed data frames to this folder.
+        """
+
+        # starting date is days_delta days ago
+        days_delta = 7
+
+        today = datetime.today()
+        start_day = (today - timedelta(days=days_delta)).date()
+
+        start_date = str(start_day.day) + '.' \
+                     + str(start_day.month) + '.' \
+                     + str(start_day.year)
+        end_date = str(today.day) + '.' \
+                   + str(today.month) + '.' \
+                   + str(today.year)
+
+        day_from   = start_day.day
+        month_from = start_day.month - 1
+        year_from  = start_day.year
+        day_to     = today.day
+        month_to   = today.month - 1
+        year_to    = today.year
+
+        market = 1
+
+        data = pd.read_csv(self.__file_name).drop('Company', axis=1)
+
+        for row in data.itertuples():
+            processing(self.__store_path, row, market, day_from, month_from, year_from
+                       , start_date, day_to, month_to, year_to, end_date)
+
+# End of StocksParser class ------------------------------------------------
+
+
 def make_url(market_, em_, code_, df_, mf_, yf_
              , from_, dt_, mt_, yt_, to_, f_, p_
              , e_, cn_, dtf_, tmf_, MSOR_, mstime_
@@ -32,13 +91,13 @@ def make_url(market_, em_, code_, df_, mf_, yf_
     return url
 
 
-def processing(path_, row, market, day_from, month_from, year_from
+def processing(store_path, row, market, day_from, month_from, year_from
                , start_date, day_to, month_to, year_to, end_date):
     """Receives two dates and ticker, makes request
     to www.finam.ru and saves parsed information
     to *.csv file to file path_.
 
-    :param path_: full path to file to fill with data
+    :param store_path: full path to folder to store with data
     :param row: item in list of companies (line in file)
     """
 
@@ -65,54 +124,10 @@ def processing(path_, row, market, day_from, month_from, year_from
     data = data.drop(data.columns[[1, 3]], axis=1)
     data.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']
 
-    file_name = path_ + 'Stocks' + row[1] + ".csv"
-    data.to_csv(file_name)
+    store_path = store_path + 'Stocks' + row[1] + ".csv"
+    data.to_csv(store_path)
 
     print(row[1] + ' - готово')
-
-
-def get_dataframe(file_name, path_):
-    """Receives file with list of companies and
-    directory path, where dataframes should
-    be saved.
-    Puts parsed dataframes to this folder.
-
-    :param file_name: full path to file with list of companies
-    :param path_: full path to storage
-    """
-
-    if file_name is None:
-        raise Exception('File name can not be empty')
-    if path_ is None:
-        raise Exception('Empty path')
-
-    # starting date is days_delta days ago
-    days_delta = 7
-
-    today = datetime.today()
-    start_day = (today - timedelta(days=days_delta)).date()
-
-    start_date = str(start_day.day) + '.' \
-               + str(start_day.month) + '.' \
-               + str(start_day.year)
-    end_date   = str(today.day) + '.' \
-               + str(today.month) + '.' \
-               + str(today.year)
-
-    day_from   = start_day.day
-    month_from = start_day.month - 1
-    year_from  = start_day.year
-    day_to     = today.day
-    month_to   = today.month - 1
-    year_to    = today.year
-
-    market = 1
-
-    data = pd.read_csv(file_name).drop('Company', axis=1)
-
-    for row in data.itertuples():
-        processing(path_, row, market, day_from, month_from, year_from
-                   , start_date, day_to, month_to, year_to, end_date)
 
 
 def parse(file_name=None, path=None):
@@ -122,4 +137,5 @@ def parse(file_name=None, path=None):
     :param path: path to directory where stocks will be saved
     """
 
-    get_dataframe(file_name, path)
+    parser = StocksParser(file_name, path)
+    parser.parse_stocks()

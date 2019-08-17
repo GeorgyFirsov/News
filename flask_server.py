@@ -1,7 +1,6 @@
 from flask import Flask, render_template, json
 import Main
 import pandas as pd
-import datetime
 from os import getcwd
 from os import system
 from sys import platform
@@ -10,14 +9,8 @@ if platform == "linux" or platform == "linux2":
     path.insert(0, getcwd() + '/NewsParser/Linux')
 elif platform == "win32":
     path.insert(0, getcwd() + '/NewsParser/Windows')
-import StocksParser.StocksParser as stocksp
-import NewsParser as newsp
-import Algorithms.stocks_check as stocksch
-import Algorithms.Classification as classify
 import Algorithms.CreateFeatures as features
 import Algorithms.Predict as predictor
-from threading import Thread
-from time import sleep
 
 app = Flask(__name__)
 
@@ -73,7 +66,7 @@ def isrised(number):
 def run():
     list_of_companies = pd.read_csv(MAIN_FILE)
     names = list(list_of_companies.Company.values)
-    df1 = features.main_(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
+    df1 = features.create(list_of_companies, NEWSS_DIR, STOCKS_DIR) #Данные, которым нужно расставить метки
     a = predictor.prediction(PICKLE_PATH, df1)
     list_ = []
     for index, name in enumerate(names):
