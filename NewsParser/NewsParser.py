@@ -10,10 +10,6 @@ from selenium.webdriver.common.keys import Keys
 from TextProcessing.TextProcessor import lemmatize, change_date
 
 
-def replace_dash(string):
-    return string.replace(' - ', '')
-
-
 class NewsParser:
     """This class provides news parsing from site
 
@@ -127,6 +123,10 @@ class NewsParser:
                 threads[i + 3].join()
 
 # End of NewsParser class --------------------------------------------------
+
+
+def replace_dash(string):
+    return string.replace(' - ', '')
 
 
 def parse(driver_path, file_name=None, path=None):
