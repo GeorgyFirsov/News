@@ -10,7 +10,8 @@ from TextProcessing.TextProcessor import lemmatize
 def make_workers(train_path):
     """Constructs vectorizer and logistic
     regression model.
-    They are ready to use."""
+    They are ready to use.
+    """
 
     df = pd.read_csv(train_path, sep=';', encoding='utf-8')
 
