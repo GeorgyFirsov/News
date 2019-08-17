@@ -1,24 +1,6 @@
-﻿from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 
 import pandas as pd
-
-
-def to_datetime_n(date_as_string):
-    """Converts date from news to specified format
-    """
-
-    date = datetime.strptime(date_as_string, "%d.%m.%Y")
-    return date.date()
-
-
-def to_datetime_st(time_as_number):
-    """Converts date from stocks to specified format
-    """
-
-    year = int(time_as_number / 10000) + 2000
-    month = int((time_as_number / 100) % 100)
-    day = time_as_number % 100
-    return datetime(year, month, day).date()
 
 
 class FeaturesCreator:
@@ -97,6 +79,24 @@ class FeaturesCreator:
         return data_frame
 
 # End of FeaturesCreator class ---------------------------------------------
+
+
+def to_datetime_n(date_as_string):
+    """Converts date from news to specified format
+    """
+
+    date = datetime.strptime(date_as_string, "%d.%m.%Y")
+    return date.date()
+
+
+def to_datetime_st(time_as_number):
+    """Converts date from stocks to specified format
+    """
+
+    year = int(time_as_number / 10000) + 2000
+    month = int((time_as_number / 100) % 100)
+    day = time_as_number % 100
+    return datetime(year, month, day).date()
 
 
 def create(list_of_companies, clnews_directory, stocks_directory):
