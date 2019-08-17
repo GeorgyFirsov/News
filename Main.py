@@ -36,35 +36,32 @@ def trace(string):
 #
 
 
-STOCKS_DIR  = getcwd()      # Directory with parsed stocks. Ends with '\' or '/'.
-NEWS_DIR    = getcwd()      # Directory with parsed news. Ends with '\' or '/'.
-NEWSS_DIR   = getcwd()      # Directory with processed news. Ends with '\' or '/'.
-TRAIN_PATH  = getcwd()      # Path to train set.
-PICKLE_PATH = getcwd()      # Path to predictor binary file
-MAIN_FILE   = 'company.csv' # Path to list of companies.
-driver_path = '/Driver/'
+stocks_directory = getcwd()       # Directory with parsed stocks. Ends with '\' or '/'.
+news_directory   = getcwd()       # Directory with parsed news. Ends with '\' or '/'.
+prnews_directory = getcwd()       # Directory with processed news. Ends with '\' or '/'.
+train_set_path   = getcwd()       # Path to train set.
+binary_path      = getcwd()       # Path to predictor binary file
+companies_file   = 'company.csv'  # Path to list of companies.
+driver_path      = '/Driver/'     # Relative path to predictor binary
 
-# driver_path = '/Driver/chromedriver_Linux' or '/Driver/chromedriver_Windows.exe'
 if platform == "win32":
-    STOCKS_DIR  += '\\StocksP\\'
-    NEWS_DIR    += '\\NewsP\\'
-    NEWSS_DIR   += '\\NewssP\\'
-    TRAIN_PATH  += '\\Algorythms\\train.csv'
-    PICKLE_PATH += '\\Algorythms\\Predictor.pickle'
-
-    driver_path += 'chromedriver_Windows.exe'
+    stocks_directory  += '\\StocksP\\'
+    news_directory    += '\\NewsP\\'
+    prnews_directory  += '\\NewssP\\'
+    train_set_path    += '\\Algorythms\\train.csv'
+    binary_path       += '\\Algorythms\\Predictor.pickle'
+    driver_path       += 'chromedriver_Windows.exe'
 else:  # Linux and Mac OS X
-    STOCKS_DIR  += '/StocksP/'
-    NEWS_DIR    += '/NewsP/'
-    NEWSS_DIR   += '/NewssP/'
-    TRAIN_PATH  += '/Algorythms/train.csv'
-    PICKLE_PATH += '/Algorythms/Predictor.pickle'
+    stocks_directory  += '/StocksP/'
+    news_directory    += '/NewsP/'
+    prnews_directory  += '/NewssP/'
+    train_set_path    += '/Algorythms/train.csv'
+    binary_path       += '/Algorythms/Predictor.pickle'
+    driver_path       += 'chromedriver_Linux'
 
-    driver_path += 'chromedriver_Linux'
-
-system('mkdir ' + STOCKS_DIR)
-system('mkdir ' + NEWS_DIR)
-system('mkdir ' + NEWSS_DIR)
+system('mkdir ' + stocks_directory)
+system('mkdir ' + news_directory)
+system('mkdir ' + prnews_directory)
 
 
 #
@@ -95,17 +92,14 @@ def update():
 
     print("\n", end='')
 
-    StocksParser.main(MAIN_FILE, STOCKS_DIR)
+    StocksParser.main(companies_file, stocks_directory)
     print('\nОжидание новостей... Это может занять некоторое время\n')
-    NewsParser.main(driver_path, MAIN_FILE, NEWS_DIR)
-    Classification.main(MAIN_FILE, NEWS_DIR, NEWSS_DIR, TRAIN_PATH)
+    NewsParser.main(driver_path, companies_file, news_directory)
+    Classification.main(companies_file, news_directory, prnews_directory, train_set_path)
 
 
 def prediction_to_string(value):
-    if value == 1:
-        return 'вырастет'
-    else:
-        return 'упадёт'
+    return 'вырастет' if value else 'упадёт'
 
 
 if __name__ == '__main__':
@@ -113,20 +107,21 @@ if __name__ == '__main__':
     Performs all the actions of application
     """
 
-    trace('MAIN_FILE  : ' + MAIN_FILE)
-    trace('STOCKS_DIR : ' + STOCKS_DIR)
-    trace('NEWS_DIR   : ' + NEWS_DIR)
-    trace('NEWSS_DIR  : ' + NEWSS_DIR)
-    trace('TRAIN_PATH : ' + TRAIN_PATH)
+    trace('companies_file   : ' + companies_file)
+    trace('stocks_directory : ' + stocks_directory)
+    trace('news_directory   : ' + news_directory)
+    trace('prnews_directory : ' + prnews_directory)
+    trace('train_set_path   : ' + train_set_path)
+    trace('driver_path      : ' + driver_path)
 
-    list_of_companies = pd.read_csv(MAIN_FILE)
+    list_of_companies = pd.read_csv(companies_file)
 
     update()
 
     # Raw working data
-    data = Features.main(list_of_companies, NEWSS_DIR, STOCKS_DIR)
+    data = Features.main(list_of_companies, prnews_directory, stocks_directory)
 
-    predictions = Predictor.prediction(PICKLE_PATH, data)
+    predictions = Predictor.prediction(binary_path, data)
     names = list_of_companies.Company.values
 
     print("\n")
