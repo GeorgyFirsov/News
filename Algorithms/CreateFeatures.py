@@ -35,11 +35,13 @@ class FeaturesCreator:
         change_price    = list()
 
         for ticker in self.__tickers:
-            df1 = pd.read_csv(self.__clnews_directory + 'Newss' + ticker + '.csv', sep=',', encoding='utf-8')
-            df1.Date = df1.Date.apply(to_datetime_n)
+            data_frame_news = pd.read_csv(self.__clnews_directory + 'Newss' + ticker + '.csv'
+                                          , encoding='utf-8', sep=',')
+            data_frame_news.Date = data_frame_news.Date.apply(to_datetime_n)
 
-            df2 = pd.read_csv(self.__stocks_directory + 'Stocks' + ticker + '.csv', sep=',', encoding='utf-8')
-            df2['Date'] = df2['Date'].apply(to_datetime_st)
+            data_frame_stocks = pd.read_csv(self.__stocks_directory + 'Stocks' + ticker + '.csv'
+                                            , encoding='utf-8', sep=',')
+            data_frame_stocks['Date'] = data_frame_stocks['Date'].apply(to_datetime_st)
 
             deltas = {
                 0: (7, 3), 1: (7, 1), 2: (7, 1), 3: (7, 1),
@@ -52,17 +54,17 @@ class FeaturesCreator:
             start_date = check_date - timedelta(days=deltas[today_week_day][0])
             end_date   = check_date - timedelta(days=deltas[today_week_day][1])
 
-            positive = df1[df1.Date >= start_date][df1.Date <= end_date].label.sum()
-            count    = df1[df1.Date >= start_date][df1.Date <= end_date].label.count()
+            positive = data_frame_news[data_frame_news.Date >= start_date][data_frame_news.Date <= end_date].label.sum()
+            count    = data_frame_news[data_frame_news.Date >= start_date][data_frame_news.Date <= end_date].label.count()
 
             positive_number.append(positive)
             negative_number.append(count - positive)
 
-            max_of_high   = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['High'].max()
-            mean_on_close = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['Close'].mean()
-            min_of_low    = df2[df2['Date'] >= start_date][df2['Date'] <= end_date]['Low'].min()
-            mean_on_close_first = df2[df2['Date'] == start_date]['Open'].mean()
-            mean_on_close_last  = df2[df2['Date'] == end_date]['Close'].mean()
+            max_of_high   = data_frame_stocks[data_frame_stocks['Date'] >= start_date][data_frame_stocks['Date'] <= end_date]['High'].max()
+            mean_on_close = data_frame_stocks[data_frame_stocks['Date'] >= start_date][data_frame_stocks['Date'] <= end_date]['Close'].mean()
+            min_of_low    = data_frame_stocks[data_frame_stocks['Date'] >= start_date][data_frame_stocks['Date'] <= end_date]['Low'].min()
+            mean_on_close_first = data_frame_stocks[data_frame_stocks['Date'] == start_date]['Open'].mean()
+            mean_on_close_last  = data_frame_stocks[data_frame_stocks['Date'] == end_date]['Close'].mean()
 
             max_moderate = max_of_high / mean_on_close
             min_moderate = min_of_low / mean_on_close

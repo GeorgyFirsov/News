@@ -54,7 +54,7 @@ class StocksParser:
 
         market = 1
 
-        data = pd.read_csv(self.__file_name).drop('Company', axis=1)
+        data = pd.read_csv(self.__file_name, encoding='utf-8').drop('Company', axis=1)
 
         for row in data.itertuples():
             processing(self.__store_path, row, market, day_from, month_from, year_from
@@ -119,7 +119,7 @@ def processing(store_path, row, market, day_from, month_from, year_from
     # proved delay
     sleep(0.8)
 
-    data = pd.read_csv(url)
+    data = pd.read_csv(url, encoding='utf-8')
 
     data = data.drop(data.columns[[1, 3]], axis=1)
     data.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume']

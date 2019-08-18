@@ -20,7 +20,7 @@ def run():
     and predictor to analyse parsed data.
     """
 
-    list_of_companies = pd.read_csv(companies_file)
+    list_of_companies = pd.read_csv(companies_file, encoding='utf-8')
     names = list(list_of_companies.Company.values)
 
     data_frame = Features.create(list_of_companies, prnews_directory, stocks_directory)
@@ -34,7 +34,7 @@ def run():
 
     page_code = render_result(predictions_list)
 
-    return json.dumps(page_code, ensure_ascii=False)
+    return json.dumps(page_code, encoding='utf-8', ensure_ascii=False)
 
 
 @server.route('/')
@@ -42,7 +42,7 @@ def main_page():
     """Displays main page on website
     """
 
-    return render_template('instruction.html')
+    return render_template('instruction.html', encoding='utf-8')
 
 
 @server.route('/update/<parameter>')
@@ -81,7 +81,7 @@ def render_result(predictions_list):
     for prediction in predictions_list:
         predictions_string += '<br> ' + prediction + '\n'
 
-    with open('./templates/results.html', 'r') as code:
+    with open('./templates/results.html', 'r', encoding='utf-8') as code:
         page_code = code.read()
         page_code = page_code.replace('<!-- insert here-->', predictions_string)
         page_code = page_code.replace('\n', '')

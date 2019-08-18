@@ -59,7 +59,7 @@ class Classifier:
                 or train_path is None:
             raise Exception("All paths must be specified")
 
-        self.__list_of_companies = pd.read_csv(companies_list_file)
+        self.__list_of_companies = pd.read_csv(companies_list_file, encoding='utf-8')
         self.__news_path = news_path
         self.__prnews_path = prnews_path
         self.__train_path = train_path
@@ -98,7 +98,7 @@ class Classifier:
                 threads[i + 3].join()
 
     def __process(self, ticker):
-        df = pd.read_csv(self.__news_path + 'News' + ticker + '.csv')
+        df = pd.read_csv(self.__news_path + 'News' + ticker + '.csv', encoding='utf-8')
         df = self.__make_predictions(df)
 
         df.to_csv(self.__prnews_path + 'Newss' + ticker + '.csv', encoding='utf-8', sep=',', index=False)
@@ -120,13 +120,13 @@ def make_workers(train_path):
     They are ready to use.
     """
 
-    df = pd.read_csv(train_path, sep=';', encoding='utf-8')
+    data_frame = pd.read_csv(train_path, sep=';', encoding='utf-8')
 
-    vectorizer = CountVectorizer().fit(df['New'])
-    features = vectorizer.transform(df['New'])
+    vectorizer = CountVectorizer().fit(data_frame['New'])
+    features = vectorizer.transform(data_frame['New'])
 
     classifier = LogisticRegression()
-    classifier.fit(features, df.label)
+    classifier.fit(features, data_frame.label)
 
     return classifier, vectorizer
 

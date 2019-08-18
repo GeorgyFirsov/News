@@ -1,7 +1,7 @@
 ﻿from os import getcwd
 from threading import Thread
 
-import csv
+import unicodecsv as csv
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver import Chrome
@@ -82,8 +82,8 @@ class NewsParser:
 
         data = [(replace_dash(change_date(date)), lemmatize(event)) for date, event in zip(dates, news)]
 
-        with open(self.__store_path + 'News' + ticker + '.csv', 'w') as file:
-            writer = csv.writer(file)
+        with open(self.__store_path + 'News' + ticker + '.csv', 'wb') as file:
+            writer = csv.writer(file, encoding='utf-8')
             writer.writerow(('Date', 'New'))
             for row in data:
                 writer.writerow(row)
@@ -92,7 +92,7 @@ class NewsParser:
         print(name + ' - готово')
 
     def __get_companies(self):
-        self.__names = pd.read_csv(self.__companies_list_file)
+        self.__names = pd.read_csv(self.__companies_list_file, encoding='utf-8')
         if self.__names is None:
             raise Exception("Error reading data frame")
 

@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     make_directories()
 
-    list_of_companies = pd.read_csv(companies_file)
+    list_of_companies = pd.read_csv(companies_file, encoding='utf-8')
 
     update()
 
