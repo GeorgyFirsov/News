@@ -9,7 +9,7 @@ def make_directories():
     """This function creates directories for parsed stocks,
     parsed news and processed (classified) news.
     Before it function checks if directories exist and doesn't
-    perform creation if they do.
+    perform creation, if they do.
     """
 
     if not path.exists(stocks_directory):
