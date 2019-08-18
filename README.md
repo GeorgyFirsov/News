@@ -1,5 +1,5 @@
 # News
-[![Version](https://img.shields.io/badge/Version-1.0-brightgreen)](https://github.com/GeorgyFirsov/News) [![Implemented](https://img.shields.io/badge/Implemented-100%25-brightgreen)](https://github.com/GeorgyFirsov/News) [![Refactored](https://img.shields.io/badge/Refactored-60%25-red)](https://github.com/GeorgyFirsov/News) [![Coverage](https://img.shields.io/badge/Coverage-0%25-red)](https://github.com/GeorgyFirsov/News)
+[![Version](https://img.shields.io/badge/Version-1.0-brightgreen)](https://github.com/GeorgyFirsov/News) [![Implemented](https://img.shields.io/badge/Implemented-100%25-brightgreen)](https://github.com/GeorgyFirsov/News) [![Refactored](https://img.shields.io/badge/Refactored-100%25-brightgreen)](https://github.com/GeorgyFirsov/News) [![Coverage](https://img.shields.io/badge/Coverage-0%25-red)](https://github.com/GeorgyFirsov/News)
 
 This program uses some machine learning technologies to predict increasing or decreasing of stocks in the nearest 2-3 days.
 
