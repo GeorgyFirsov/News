@@ -1,6 +1,4 @@
 import warnings
-from os import getcwd, system
-from sys import platform
 
 import pandas as pd
 
@@ -9,54 +7,14 @@ import NewsParser.NewsParser as NewsParser
 import Algorithms.Classification as Classifier
 import Algorithms.CreateFeatures as Features
 import Algorithms.Predict as Predictor
-from Trace.Trace import trace
+from Utilites.MakeDirectories import make_directories
+from Utilites.Trace import trace
+from Utilites.Paths import *
 
 
-#
 # Configuration
-#
-
-
 warnings.filterwarnings('ignore')
 debug = False
-
-
-#
-# Paths
-#
-
-
-stocks_directory = getcwd()       # Directory with parsed stocks. Ends with '\' or '/'.
-news_directory   = getcwd()       # Directory with parsed news. Ends with '\' or '/'.
-prnews_directory = getcwd()       # Directory with processed news. Ends with '\' or '/'.
-train_set_path   = getcwd()       # Path to train set.
-binary_path      = getcwd()       # Path to predictor binary file
-companies_file   = 'company.csv'  # Path to list of companies.
-driver_path      = '/Driver/'     # Relative path to predictor binary
-
-if platform == "win32":
-    stocks_directory  += '\\StocksP\\'
-    news_directory    += '\\NewsP\\'
-    prnews_directory  += '\\NewssP\\'
-    train_set_path    += '\\Algorithms\\train.csv'
-    binary_path       += '\\Algorithms\\Predictor.pickle'
-    driver_path       += 'chromedriver_Windows.exe'
-else:  # Linux and Mac OS X
-    stocks_directory  += '/StocksP/'
-    news_directory    += '/NewsP/'
-    prnews_directory  += '/NewssP/'
-    train_set_path    += '/Algorithms/train.csv'
-    binary_path       += '/Algorithms/Predictor.pickle'
-    driver_path       += 'chromedriver_Linux'
-
-system('mkdir ' + stocks_directory)
-system('mkdir ' + news_directory)
-system('mkdir ' + prnews_directory)
-
-
-#
-# Implementation
-#
 
 
 def update():
@@ -83,7 +41,9 @@ def update():
     print("\n", end='')
 
     StocksParser.parse(companies_file, stocks_directory)
+
     print('\nОжидание новостей... Это может занять некоторое время\n')
+
     NewsParser.parse(driver_path, companies_file, news_directory)
     Classifier.classify(companies_file, news_directory, prnews_directory, train_set_path)
 
@@ -103,6 +63,8 @@ if __name__ == '__main__':
     trace('prnews_directory : ' + prnews_directory, debug)
     trace('train_set_path   : ' + train_set_path, debug)
     trace('driver_path      : ' + driver_path, debug)
+
+    make_directories()
 
     list_of_companies = pd.read_csv(companies_file)
 

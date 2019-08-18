@@ -3,9 +3,7 @@
 
 This program uses some machine learning technologies to predict increasing or decreasing of stocks in the nearest 2-3 days.
 
-> ⚠ **Attention\!** Windows version is currently broken.
-
-> ⚠ **Attention\!** Flask server code is currently under refactoring process. It doesn't work now with restructured project.
+> ⚠ **Attention\!** Windows version is currently broken. Try to use FlaskServer.py
 
 **Code refactoring in progress**
 - Code must comply with PEP guidelines
@@ -24,6 +22,11 @@ This program uses some machine learning technologies to predict increasing or de
 ```bash
 python ./Main.py
 ```
+Or this one:
+```bash
+python ./FlaskServer.py
+```
+
 There should arise some errors. If not - that's it.
 Otherwise run following commands:
 ```bash
