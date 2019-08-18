@@ -15,11 +15,16 @@ server = Flask(__name__)
 
 @server.route('/run')
 def run():
+    """Displays result of predictions on website.
+    Before this action it calls features creator
+    and predictor to analyse parsed data.
+    """
+
     list_of_companies = pd.read_csv(companies_file)
     names = list(list_of_companies.Company.values)
 
-    df1 = Features.create(list_of_companies, prnews_directory, stocks_directory)
-    predictions = Predictor.prediction(binary_path, df1)
+    data_frame = Features.create(list_of_companies, prnews_directory, stocks_directory)
+    predictions = Predictor.prediction(binary_path, data_frame)
 
     predictions_list = list()
 
@@ -33,12 +38,21 @@ def run():
 
 
 @server.route('/')
-def __main_page():
+def main_page():
+    """Displays main page on website
+    """
+
     return render_template('instruction.html')
 
 
 @server.route('/update/<parameter>')
-def __update_server(parameter):
+def update_server(parameter):
+    """This function performs data update.
+    If passed '2' it does nothing.
+    Otherwise if passed something that differs from 1
+    displays an error.
+    """
+
     if parameter == '2':
         return ' '
     if parameter != '1':
@@ -62,6 +76,7 @@ def render_result(predictions_list):
 
     :return: html code of page to display
     """
+
     predictions_string = str()
     for prediction in predictions_list:
         predictions_string += '<br> ' + prediction + '\n'
