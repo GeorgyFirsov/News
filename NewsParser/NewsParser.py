@@ -17,7 +17,7 @@ class NewsParser:
         __url: url to site with news
         __companies_list_file: file with list of companies
         __store_path: path to directory where news will be saved
-        __driver_path: relative path to Chrome driver
+        __driver_path: path to Chrome driver
     """
 
     def __init__(self, url, companies_list_file
@@ -53,7 +53,7 @@ class NewsParser:
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
 
-        browser = Chrome(executable_path=getcwd() + self.__driver_path, chrome_options=options)
+        browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
         browser.get(self.__url)
 
         search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
@@ -132,7 +132,7 @@ def replace_dash(string):
 def parse(driver_path, file_name=None, path=None):
     """Main entry point of module. Called from Main.py.
 
-    :param driver_path: relative path to Chrome driver
+    :param driver_path: path to Chrome driver
     :param file_name: file with list of companies
     :param path: path to directory where news will be saved
     """
