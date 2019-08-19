@@ -58,6 +58,25 @@ python ./FlaskServer.py
 ```
 That's it! Fell free to use according to [MIT License][].
 
+### Generating a new predictor
+Sometimes you may get Segmentation Fault error. Or maybe you have some other reasons to generate your own predictor.
+You can do it by following instructions:
+
+##### Windows
+* Make sure you have jupyter notebook installed (you have, if you use Anaconda).
+* Launch jupyter notebook via Anaconda Navigator (or somehow else).
+* Run all cells in Learn.ipynb. You can rerun 'Training our predictor' section until you get accuracy you want (consider that you **cannot** get score above 90%!).
+* Replace Predictor.pickle in data folder with newly generated one (it is located near Learn.ipynb).
+##### Linux / Mac OS X
+* Usually you have installed jupyter notebook, if you have Python installed. If not - install it.
+* Run
+```bash
+jupyter notebook
+```
+* Look for Learn.ipynb.
+* Run all cells. You can rerun 'Training our predictor' section until you get accuracy you want (consider that you **cannot** get score above 90%!).
+* Replace Predictor.pickle in data folder with newly generated one (it is located near Learn.ipynb).
+
 ### Contributing
 
 Feel free to contribute! We are happy to work with you :)
