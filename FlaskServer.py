@@ -1,3 +1,4 @@
+# Flask server module (standalone from Main.py)
 import pandas as pd
 from flask import Flask, render_template, json
 

@@ -1,3 +1,5 @@
+# This module performs predictor deserialization and prediction
+# of results for parsed data
 import pickle
 
 

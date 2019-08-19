@@ -1,3 +1,4 @@
+# This file contains lemmatizator and date converter
 from datetime import datetime, timedelta
 
 from string import punctuation

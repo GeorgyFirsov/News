@@ -1,5 +1,4 @@
-# This file contains creator of directories
-
+# This file contains creator of directories for data
 from os import system, path
 
 from .Paths import stocks_directory, news_directory, prnews_directory

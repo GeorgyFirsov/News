@@ -1,4 +1,5 @@
-﻿from threading import Thread
+﻿# This file contains news classifier implementation
+from threading import Thread
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer

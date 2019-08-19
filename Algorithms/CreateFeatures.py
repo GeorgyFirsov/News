@@ -1,3 +1,4 @@
+# This file contains creator of data frame for predictor
 from datetime import datetime, timedelta
 
 import pandas as pd

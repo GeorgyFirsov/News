@@ -1,4 +1,4 @@
-﻿from os import getcwd
+﻿# This module parses news from web
 from threading import Thread
 
 import unicodecsv as csv

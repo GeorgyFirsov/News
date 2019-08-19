@@ -1,7 +1,8 @@
-﻿from time import sleep
+﻿# This module parses stocks from web
+from time import sleep
+from datetime import datetime, timedelta
 
 import pandas as pd
-from datetime import datetime, timedelta
 
 
 class StocksParser:

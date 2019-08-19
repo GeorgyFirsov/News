@@ -1,5 +1,4 @@
 # This file contains necessary paths
-
 from os import getcwd
 from sys import platform
 

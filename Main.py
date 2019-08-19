@@ -1,3 +1,4 @@
+# Main file of this program
 import warnings
 
 import pandas as pd
@@ -12,7 +13,7 @@ from Utilites.Trace import trace
 from Utilites.Paths import *
 
 
-# Configuration
+# Disable annoying warnings
 warnings.filterwarnings('ignore')
 debug = False
 
