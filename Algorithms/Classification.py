@@ -1,5 +1,5 @@
 ﻿# This file contains news classifier implementation
-from threading import Thread
+from threading import Thread, Semaphore
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -65,6 +65,10 @@ class Classifier:
         self.__prnews_path = prnews_path
         self.__train_path = train_path
 
+        # Semaphore gives us guarantee, that at most
+        # 4 threads will run run at the same time
+        self.__semaphore = Semaphore(4)
+
     def classify(self):
         """Performs main action of this class
         Predictions will be stored in files
@@ -80,29 +84,23 @@ class Classifier:
         for ticker in tickers:
             threads.append(Thread(target=self.__process, args=(ticker,)))
 
-        for i in range(0, len(threads), 4):
-            if i < len(threads):
-                threads[i].start()
-            if i + 1 < len(threads):
-                threads[i + 1].start()
-            if i + 2 < len(threads):
-                threads[i + 2].start()
-            if i + 3 < len(threads):
-                threads[i + 3].start()
-            if i < len(threads):
-                threads[i].join()
-            if i + 1 < len(threads):
-                threads[i + 1].join()
-            if i + 2 < len(threads):
-                threads[i + 2].join()
-            if i + 3 < len(threads):
-                threads[i + 3].join()
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
 
     def __process(self, ticker):
-        df = pd.read_csv(self.__news_path + 'News' + ticker + '.csv', encoding='utf-8')
-        df = self.__make_predictions(df)
+        self.__semaphore.acquire()
 
-        df.to_csv(self.__prnews_path + 'Newss' + ticker + '.csv', encoding='utf-8', sep=',', index=False)
+        try:
+            data_frame = pd.read_csv(self.__news_path + 'News' + ticker + '.csv', encoding='utf-8')
+            data_frame = self.__make_predictions(data_frame)
+
+            data_frame.to_csv(self.__prnews_path + 'Newss' + ticker + '.csv', encoding='utf-8', sep=',', index=False)
+
+        finally:
+            self.__semaphore.release()
 
     def __make_predictions(self, data_frame):
         classifier, vectorizer = make_workers(self.__train_path)

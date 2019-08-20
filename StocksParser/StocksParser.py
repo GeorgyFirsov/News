@@ -128,7 +128,7 @@ def processing(store_path, row, market, day_from, month_from, year_from
     store_path = store_path + 'Stocks' + row[1] + ".csv"
     data.to_csv(store_path)
 
-    print(row[1] + ' - готово')
+    print('Готово: {}'.format(row[1]))
 
 
 def parse(file_name=None, path=None):

@@ -1,5 +1,5 @@
 ﻿# This module parses news from web
-from threading import Thread
+from threading import Thread, Semaphore
 
 import unicodecsv as csv
 import pandas as pd
@@ -37,8 +37,20 @@ class NewsParser:
         self.__store_path = store_path
         self.__driver_path = driver_path
 
+        # Semaphore gives us guarantee, that at most
+        # 4 threads will run run at the same time
+        self.__semaphore = Semaphore(4)
+
         # will be filled in future
         self.__names = None
+
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+
+        self.__browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
+
+    def __del__(self):
+        self.__browser.close()
 
     def parse_news(self):
         """Makes main work of this class
@@ -50,46 +62,47 @@ class NewsParser:
         self.__get_news()
 
     def __process(self, name, ticker):
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
+        self.__semaphore.acquire()
 
-        browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
-        browser.get(self.__url)
+        try:
+            self.__browser.get(self.__url)
 
-        search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
-        search_form.send_keys(name)
-        search_form.send_keys(Keys.ENTER)
-        search_form = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
-        search_form.click()
-        search_form = browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
-        search_form.click()
+            search_form = self.__browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
+            search_form.send_keys(name)
+            search_form.send_keys(Keys.ENTER)
+            search_form = self.__browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
+            search_form.click()
+            search_form = self.__browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
+            search_form.click()
 
-        pages_table = browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
+            pages_table = self.__browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
 
-        news = []
-        dates = []
-        
-        for i in range(2):
-            pages_table.find_element_by_link_text(str(i + 1)).click()
-            table = browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
-            articles = table.find_elements_by_class_name('articleItem')
+            news = []
+            dates = []
 
-            for article in articles:
-                text = article.find_element_by_class_name('textDiv').find_element_by_tag_name('a').text
-                date = article.find_element_by_class_name('articleDetails').find_element_by_class_name('date').text
-                news.append(text)
-                dates.append(date)
+            for i in range(2):
+                pages_table.find_element_by_link_text(str(i + 1)).click()
+                table = self.__browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
+                articles = table.find_elements_by_class_name('articleItem')
 
-        data = [(replace_dash(change_date(date)), lemmatize(event)) for date, event in zip(dates, news)]
+                for article in articles:
+                    text = article.find_element_by_class_name('textDiv').find_element_by_tag_name('a').text
+                    date = article.find_element_by_class_name('articleDetails').find_element_by_class_name('date').text
+                    news.append(text)
+                    dates.append(date)
 
-        with open(self.__store_path + 'News' + ticker + '.csv', 'wb') as file:
-            writer = csv.writer(file, encoding='utf-8')
-            writer.writerow(('Date', 'New'))
-            for row in data:
-                writer.writerow(row)
+            data = [(replace_dash(change_date(date)), lemmatize(event)) for date, event in zip(dates, news)]
 
-        browser.close()
-        print(name + ' - готово')
+            with open(self.__store_path + 'News' + ticker + '.csv', 'wb') as file:
+                writer = csv.writer(file, encoding='utf-8')
+                writer.writerow(('Date', 'New'))
+                for row in data:
+                    writer.writerow(row)
+
+            print('Готово: {}'.format(name))
+
+        finally:
+            self.__semaphore.release()
 
     def __get_companies(self):
         self.__names = pd.read_csv(self.__companies_list_file, encoding='utf-8')
@@ -104,23 +117,11 @@ class NewsParser:
         for ticker, name in zip(tickers, names):
             threads.append(Thread(target=self.__process, args=(name, ticker, )))
 
-        for i in range(0, len(threads), 4):
-            if i < len(threads):
-                threads[i].start()
-            if i + 1 < len(threads):
-                threads[i + 1].start()
-            if i + 2 < len(threads):
-                threads[i + 2].start()
-            if i + 3 < len(threads):
-                threads[i + 3].start()
-            if i < len(threads):
-                threads[i].join()
-            if i + 1 < len(threads):
-                threads[i + 1].join()
-            if i + 2 < len(threads):
-                threads[i + 2].join()
-            if i + 3 < len(threads):
-                threads[i + 3].join()
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
 
 # End of NewsParser class --------------------------------------------------
 
