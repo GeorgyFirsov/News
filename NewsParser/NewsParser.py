@@ -44,14 +44,6 @@ class NewsParser:
         # will be filled in future
         self.__names = None
 
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-
-        self.__browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
-
-    def __del__(self):
-        self.__browser.close()
-
     def parse_news(self):
         """Makes main work of this class
         Firstly reads companies from file and than
@@ -65,24 +57,28 @@ class NewsParser:
         self.__semaphore.acquire()
 
         try:
-            self.__browser.get(self.__url)
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
 
-            search_form = self.__browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
+            browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
+            browser.get(self.__url)
+
+            search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
             search_form.send_keys(name)
             search_form.send_keys(Keys.ENTER)
-            search_form = self.__browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
+            search_form = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
             search_form.click()
-            search_form = self.__browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
+            search_form = browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
             search_form.click()
 
-            pages_table = self.__browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
+            pages_table = browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
 
             news  = list()
             dates = list()
 
             for i in range(2):
                 pages_table.find_element_by_link_text(str(i + 1)).click()
-                table = self.__browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
+                table = browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
                 articles = table.find_elements_by_class_name('articleItem')
 
                 for article in articles:
@@ -102,6 +98,7 @@ class NewsParser:
             print('Готово: {}'.format(name))
 
         finally:
+            browser.close()
             self.__semaphore.release()
 
     def __get_companies(self):
