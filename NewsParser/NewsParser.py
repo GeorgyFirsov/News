@@ -77,8 +77,8 @@ class NewsParser:
 
             pages_table = self.__browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
 
-            news = []
-            dates = []
+            news  = list()
+            dates = list()
 
             for i in range(2):
                 pages_table.find_element_by_link_text(str(i + 1)).click()
