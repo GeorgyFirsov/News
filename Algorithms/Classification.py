@@ -46,6 +46,7 @@ class Classifier:
         __news_path: directory with news
         __prnews_path: directory to store classified news
         __train_path: full path to training dataset
+        __semaphore: semaphore, that bounds an amount of simultaneously working threads
     """
 
     def __init__(self, companies_list_file, news_path, prnews_path, train_path):

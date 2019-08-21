@@ -18,6 +18,7 @@ class NewsParser:
         __companies_list_file: file with list of companies
         __store_path: path to directory where news will be saved
         __driver_path: path to Chrome driver
+        __semaphore: semaphore, that bounds an amount of simultaneously working threads
     """
 
     def __init__(self, url, companies_list_file
