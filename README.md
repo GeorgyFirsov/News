@@ -3,7 +3,7 @@
 
 [Repo]:        https://github.com/GeorgyFirsov/News
 [MIT License]: https://github.com/GeorgyFirsov/News/blob/master/LICENSE
-[Version]:     https://img.shields.io/badge/Version-1.1-brightgreen
+[Version]:     https://img.shields.io/badge/Version-1.2-brightgreen
 [Implemented]: https://img.shields.io/badge/Implemented-100%25-brightgreen
 [Refactored]:  https://img.shields.io/badge/Refactored-100%25-brightgreen
 [Coverage]:    https://img.shields.io/badge/Coverage-0%25-red
