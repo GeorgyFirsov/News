@@ -13,7 +13,7 @@ class StocksParser:
         __store_path: path to directory where stocks will be saved
     """
 
-    def __init__(self, file_name, store_path):
+    def __init__(self, file_name: str, store_path: str):
         """Constructs parser object.
         It checks if all field are not empty
         and if not, throws an exception.
@@ -67,7 +67,7 @@ class StocksParser:
 def make_url(market_, em_, code_, df_, mf_, yf_
              , from_, dt_, mt_, yt_, to_, f_, p_
              , e_, cn_, dtf_, tmf_, MSOR_, mstime_
-             , mstimever_):
+             , mstimever_) -> str:
     """This function composes request url from
     passed arguments. This url will return a
     *.csv file from www.finam.ru.
@@ -131,7 +131,7 @@ def processing(store_path, row, market, day_from, month_from, year_from
     print('Готово: {}'.format(row[1]))
 
 
-def parse(file_name=None, path=None):
+def parse(file_name: str = None, path: str = None):
     """Main entry point of module. Called from Main.py.
 
     :param file_name: file with list of companies

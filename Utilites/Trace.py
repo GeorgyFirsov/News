@@ -1,7 +1,7 @@
 # This module performs debugging log
 
 
-def trace(string, state, file='stdout'):
+def trace(string: str, state: bool, file: str = 'stdout'):
     """Prints passed message on screen
     or writes it to a specified file
 

@@ -25,7 +25,7 @@ def run():
     names = list(list_of_companies.Company.values)
 
     data_frame = Features.create(list_of_companies, prnews_directory, stocks_directory)
-    predictions = Predictor.prediction(binary_path, data_frame)
+    predictions = Predictor.predict(binary_path, data_frame)
 
     predictions_list = list()
 

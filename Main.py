@@ -49,7 +49,7 @@ def update():
     Classifier.classify(companies_file, news_directory, prnews_directory, train_set_path)
 
 
-def prediction_to_string(value):
+def prediction_to_string(value: int) -> str:
     return 'вырастет' if value else 'упадёт'
 
 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     # Raw working data
     data = Features.create(list_of_companies, prnews_directory, stocks_directory)
 
-    predictions = Predictor.prediction(binary_path, data)
+    predictions = Predictor.predict(binary_path, data)
     names = list_of_companies.Company.values
 
     print("\n")

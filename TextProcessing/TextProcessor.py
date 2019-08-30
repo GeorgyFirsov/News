@@ -5,7 +5,7 @@ from string import punctuation
 from pymorphy2 import MorphAnalyzer
 
 
-def lemmatize(text):
+def lemmatize(text: str) -> str:
     """This function uses pymorphy2 library to convert
     all words in input text ot normal form for
     further vectorization. All punctuation marks
@@ -30,7 +30,7 @@ def lemmatize(text):
     return converted_text
 
 
-def change_date(date):
+def change_date(date: str) -> str:
     """Makes date to be matched the format dd.mm.yyy
     If format already satisfied does nothing
     Otherwise converts date to correct format

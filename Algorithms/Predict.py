@@ -3,7 +3,7 @@
 import pickle
 
 
-def prediction(pickle_path, data):
+def predict(pickle_path: str, data) -> list:
     """Function converts prepared data
     to a prediction about stocks using serialized
     earlier predictor

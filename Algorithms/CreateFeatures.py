@@ -16,7 +16,7 @@ class FeaturesCreator:
         __stocks_directory: path to directory with parsed stocks
     """
 
-    def __init__(self, list_of_companies, clnews_directory, stocks_directory):
+    def __init__(self, list_of_companies, clnews_directory: str, stocks_directory: str):
         self.__tickers = list(list_of_companies.Ticker.values)
         self.__names   = list(list_of_companies.Company.values)
         self.__clnews_directory = clnews_directory
@@ -84,7 +84,7 @@ class FeaturesCreator:
 # End of FeaturesCreator class ---------------------------------------------
 
 
-def to_datetime_n(date_as_string):
+def to_datetime_n(date_as_string: str):
     """Converts date from news to specified format
     """
 
@@ -92,7 +92,7 @@ def to_datetime_n(date_as_string):
     return date.date()
 
 
-def to_datetime_st(time_as_number):
+def to_datetime_st(time_as_number: int):
     """Converts date from stocks to specified format
     """
 
@@ -102,7 +102,7 @@ def to_datetime_st(time_as_number):
     return datetime(year, month, day).date()
 
 
-def create(list_of_companies, clnews_directory, stocks_directory):
+def create(list_of_companies, clnews_directory: str, stocks_directory: str):
     """Performs main function of this module - converts
     parsed data to predictor-friendly data frame.
 

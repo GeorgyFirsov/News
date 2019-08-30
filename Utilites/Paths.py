@@ -3,7 +3,7 @@ from os import getcwd
 from sys import platform
 
 
-def change_slash(target):
+def change_slash(target: str) -> str:
     return target.replace('/', '\\')
 
 

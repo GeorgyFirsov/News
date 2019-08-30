@@ -21,8 +21,8 @@ class NewsParser:
         __semaphore: semaphore, that bounds an amount of simultaneously working threads
     """
 
-    def __init__(self, url, companies_list_file
-                 , store_path, driver_path):
+    def __init__(self, url: str, companies_list_file: str
+                 , store_path: str, driver_path: str):
         """Constructs parser object.
         It checks if all field are not empty
         and if not, throws an exception.
@@ -54,15 +54,16 @@ class NewsParser:
         self.__get_companies()
         self.__get_news()
 
-    def __process(self, name, ticker):
+    def __process(self, name: str, ticker: str):
         self.__semaphore.acquire()
 
-        try:
-            options = webdriver.ChromeOptions()
-            options.add_argument('headless')
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
 
-            browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
-            browser.get(self.__url)
+        browser = Chrome(executable_path=self.__driver_path, chrome_options=options)
+        browser.get(self.__url)
+
+        try:
 
             search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
             search_form.send_keys(name)
@@ -124,11 +125,11 @@ class NewsParser:
 # End of NewsParser class --------------------------------------------------
 
 
-def replace_dash(string):
+def replace_dash(string: str) -> str:
     return string.replace(' - ', '')
 
 
-def parse(driver_path, file_name=None, path=None):
+def parse(driver_path: str, file_name: str = None, path: str = None):
     """Main entry point of module. Called from Main.py.
 
     :param driver_path: path to Chrome driver

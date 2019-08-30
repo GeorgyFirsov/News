@@ -91,7 +91,7 @@ class Classifier:
         for thread in threads:
             thread.join()
 
-    def __process(self, ticker):
+    def __process(self, ticker: str):
         self.__semaphore.acquire()
 
         try:
@@ -114,7 +114,7 @@ class Classifier:
 # End of Classifier class --------------------------------------------------
 
 
-def make_workers(train_path):
+def make_workers(train_path: str):
     """Constructs vectorizer and logistic
     regression model.
     They are ready to use.
@@ -131,7 +131,7 @@ def make_workers(train_path):
     return classifier, vectorizer
 
 
-def classify(main_file_path, news_path, newss_path, train_path):
+def classify(main_file_path: str, news_path: str, newss_path: str, train_path: str):
     """Main entry point of module. Called from Main.py.
 
     :param main_file_path: file with list of companies
