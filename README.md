@@ -1,12 +1,14 @@
 # News
-[![Version][]][Repo] [![Implemented][]][Repo] [![Refactored][]][Repo] [![Coverage][]][Repo]
+[![Version][]][Releases] [![Implemented][]][Repo] [![Refactored][]][Repo] [![Coverage][]][Repo] [![License][]][GPL License]
 
 [Repo]:        https://github.com/GeorgyFirsov/News
-[MIT License]: https://github.com/GeorgyFirsov/News/blob/master/LICENSE
+[Releases]:    https://github.com/GeorgyFirsov/News/releases
+[GPL License]: https://github.com/GeorgyFirsov/News/blob/master/LICENSE
 [Version]:     https://img.shields.io/badge/Version-1.2-brightgreen
 [Implemented]: https://img.shields.io/badge/Implemented-100%25-brightgreen
 [Refactored]:  https://img.shields.io/badge/Refactored-100%25-brightgreen
 [Coverage]:    https://img.shields.io/badge/Coverage-0%25-red
+[License]:     https://img.shields.io/badge/License-GNU%20GPL%20v3-blue
 
 This program uses some machine learning technologies to predict increasing or decreasing of stocks in the nearest 2-3 days.
 
@@ -56,7 +58,7 @@ Or this one (to start flask server):
 ```bash
 python ./FlaskServer.py
 ```
-That's it! Fell free to use according to [MIT License][].
+That's it! Fell free to use according to [GPL License][].
 
 ### Generating a new predictor
 Sometimes you may get Segmentation Fault error. Or maybe you have some other reasons to generate your own predictor.
