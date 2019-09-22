@@ -9,7 +9,6 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
 
 from TextProcessing.TextProcessor import lemmatize, change_date
-from Utilites.Trace import trace
 
 
 class NewsParser:
@@ -24,14 +23,15 @@ class NewsParser:
     """
 
     def __init__(self, url: str, companies_list_file: str
-                 , store_path: str, driver_path: str, delay: float = 0.25):
+                 , store_path: str, driver_path: str
+                 , delay: float = 0.25):
         """Constructs parser object.
         It checks if all field are not empty
         and if not, throws an exception.
         """
 
         if companies_list_file is None \
-                or store_path is None  \
+                or store_path is None \
                 or driver_path is None:
             raise Exception("All paths must be specified")
 
@@ -74,7 +74,7 @@ class NewsParser:
 
             browser.find_element_by_xpath('''/html/body/div[5]/section/div/div[1]/ul/li[3]/a''').click()
 
-            news  = list()
+            news = list()
             dates = list()
 
             # Waiting is necessary, because updated site
@@ -118,13 +118,14 @@ class NewsParser:
 
         threads = []
         for ticker, name in zip(tickers, names):
-            threads.append(Thread(target=self.__process, args=(name, ticker, )))
+            threads.append(Thread(target=self.__process, args=(name, ticker,)))
 
         for thread in threads:
             thread.start()
 
         for thread in threads:
             thread.join()
+
 
 # End of NewsParser class --------------------------------------------------
 
@@ -142,6 +143,5 @@ def parse(driver_path: str, file_name: str = None, path: str = None):
     """
 
     url = 'https://ru.investing.com/'
-    parser = NewsParser(url, file_name, path, driver_path, delay=0.25)
+    parser = NewsParser(url, file_name, path, driver_path)
     parser.parse_news()
-
