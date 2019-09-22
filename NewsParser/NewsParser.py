@@ -74,7 +74,7 @@ class NewsParser:
 
             browser.find_element_by_xpath('''/html/body/div[5]/section/div/div[1]/ul/li[3]/a''').click()
 
-            news = list()
+            news  = list()
             dates = list()
 
             # Waiting is necessary, because updated site
@@ -113,12 +113,10 @@ class NewsParser:
             raise Exception("Error reading data frame")
 
     def __get_news(self):
-        names = self.__names.Company.values
+        names   = self.__names.Company.values
         tickers = self.__names.Ticker.values
 
-        threads = []
-        for ticker, name in zip(tickers, names):
-            threads.append(Thread(target=self.__process, args=(name, ticker,)))
+        threads = [Thread(target=self.__process, args=(name, ticker,)) for ticker, name in zip(tickers, names)]
 
         for thread in threads:
             thread.start()

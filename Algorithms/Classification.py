@@ -80,10 +80,7 @@ class Classifier:
 
     def __write_predictions(self):
         tickers = self.__list_of_companies.Ticker.values
-
-        threads = []
-        for ticker in tickers:
-            threads.append(Thread(target=self.__process, args=(ticker,)))
+        threads = [Thread(target=self.__process, args=(ticker,)) for ticker in tickers]
 
         for thread in threads:
             thread.start()
