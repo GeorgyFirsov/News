@@ -1,5 +1,6 @@
 ﻿# This module parses news from web
 from threading import Thread, Semaphore
+from time import sleep
 
 import unicodecsv as csv
 import pandas as pd
@@ -8,6 +9,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
 
 from TextProcessing.TextProcessor import lemmatize, change_date
+from Utilites.Trace import trace
 
 
 class NewsParser:
@@ -22,7 +24,7 @@ class NewsParser:
     """
 
     def __init__(self, url: str, companies_list_file: str
-                 , store_path: str, driver_path: str):
+                 , store_path: str, driver_path: str, delay: float = 0.25):
         """Constructs parser object.
         It checks if all field are not empty
         and if not, throws an exception.
@@ -37,6 +39,7 @@ class NewsParser:
         self.__companies_list_file = companies_list_file
         self.__store_path = store_path
         self.__driver_path = driver_path
+        self.__delay = delay
 
         # Semaphore gives us guarantee, that at most
         # 4 threads will run run at the same time
@@ -68,26 +71,27 @@ class NewsParser:
             search_form = browser.find_element_by_xpath('''/html/body/div[5]/header/div[1]/div/div[3]/div[1]/input''')
             search_form.send_keys(name)
             search_form.send_keys(Keys.ENTER)
-            search_form = browser.find_element_by_xpath('''//*[@id="fullColumn"]/div/div[2]/div[2]/div[1]/a[1]''')
-            search_form.click()
-            search_form = browser.find_element_by_xpath('''//*[@id="pairSublinksLevel1"]/li[3]/a''')
-            search_form.click()
 
-            pages_table = browser.find_element_by_xpath('''//*[@id="paginationWrap"]/div[2]''')
+            browser.find_element_by_xpath('''/html/body/div[5]/section/div/div[1]/ul/li[3]/a''').click()
 
             news  = list()
             dates = list()
 
-            for i in range(2):
-                pages_table.find_element_by_link_text(str(i + 1)).click()
-                table = browser.find_element_by_xpath('''//*[@id="leftColumn"]/div[8]''')
-                articles = table.find_elements_by_class_name('articleItem')
+            # Waiting is necessary, because updated site
+            # marks page as loaded before news table is
+            # ready. So we need to wait until it loads.
+            sleep(self.__delay)
 
-                for article in articles:
-                    text = article.find_element_by_class_name('textDiv').find_element_by_tag_name('a').text
-                    date = article.find_element_by_class_name('articleDetails').find_element_by_class_name('date').text
-                    news.append(text)
-                    dates.append(date)
+            table = browser.find_element_by_xpath('''/html/body/div[5]/section/div/div[4]/div[3]/div''')
+            articles = table.find_elements_by_class_name('articleItem')
+
+            for article in articles:
+                text_div = article.find_element_by_class_name('textDiv')
+                text = text_div.find_element_by_class_name('title').text
+                date = text_div.find_element_by_class_name('articleDetails').find_element_by_class_name('date').text
+
+                news.append(text)
+                dates.append(date)
 
             data = [(replace_dash(change_date(date)), lemmatize(event)) for date, event in zip(dates, news)]
 
@@ -138,6 +142,6 @@ def parse(driver_path: str, file_name: str = None, path: str = None):
     """
 
     url = 'https://ru.investing.com/'
-    parser = NewsParser(url, file_name, path, driver_path)
+    parser = NewsParser(url, file_name, path, driver_path, delay=0.25)
     parser.parse_news()
 
